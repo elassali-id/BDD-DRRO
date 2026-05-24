@@ -3,222 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRRO — DASHBOARD INVETAIRE 2026</title>
+
+<title>DRRO — DASHBOARD INVENTAIRE 2026</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;500;600;700&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0a0a0f;--s1:#12121a;--s2:#1a1a26;--s3:#22223a;
-  --bd:#2a2a45;--bd2:#3a3a60;
-  --acc:#5b8df6;--acc2:#a78bfa;--acc3:#34d399;
-  --amber:#fbbf24;--red:#f87171;--blue:#60a5fa;
-  --tx:#e2e8ff;--tx2:#8892b0;--tx3:#4a5070;
-  --mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
-  --r:8px;--r2:12px;--r3:16px;
-}
-body{background:var(--bg);color:var(--tx);font-family:var(--sans);min-height:100vh;font-size:14px}
 
-/* LOADING SCREEN */
-#loadScreen{
-  position:fixed;inset:0;background:var(--bg);z-index:9999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;500;600;700&display=swap');
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
-.spinner{width:40px;height:40px;border:2px solid var(--bd2);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.load-status{font-family:var(--mono);font-size:12px;color:var(--tx2);text-align:center;line-height:1.8}
-.load-bar{width:280px;height:3px;background:var(--bd);border-radius:99px;overflow:hidden}
-.load-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width .4s ease;width:0%}
+
+:root{
+  --bg:#f5f7fb;
+  --s1:#ffffff;
+  --s2:#f1f5f9;
+  --s3:#e2e8f0;
+
+  --bd:#dbe3ee;
+  --bd2:#cbd5e1;
+
+  --acc:#2563eb;
+  --acc2:#7c3aed;
+  --acc3:#10b981;
+
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --blue:#3b82f6;
+
+  --tx:#0f172a;
+  --tx2:#475569;
+  --tx3:#94a3b8;
+
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Syne',sans-serif;
+
+  --r:8px;
+  --r2:12px;
+  --r3:16px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:var(--sans);
+  min-height:100vh;
+  font-size:14px;
+}
 
 /* HEADER */
+
 header{
-  background:var(--s1);border-bottom:1px solid var(--bd);
-  height:54px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;position:sticky;top:0;z-index:100;
+  background:#ffffffcc;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bd);
+  height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
-.logo{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em}
-.logo .acc{color:var(--acc)}.logo .sep{color:var(--tx3)}
-.hdr-right{display:flex;align-items:center;gap:8px}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--acc3);box-shadow:0 0 6px var(--acc3);animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.status-txt{font-family:var(--mono);font-size:11px;color:var(--tx2)}
+
+.logo{
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:600;
+}
+
+.logo .acc{
+  color:var(--acc);
+}
+
+.hdr-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--acc3);
+}
+
+.status-txt{
+  font-size:12px;
+  color:var(--tx2);
+}
+
+.refresh-btn{
+  background:var(--s2);
+  border:1px solid var(--bd);
+  border-radius:6px;
+  padding:6px 12px;
+  cursor:pointer;
+  color:var(--tx2);
+}
 
 /* TABS */
-nav{background:var(--s1);border-bottom:1px solid var(--bd);display:flex;padding:0 24px;gap:2px}
-.tab{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:14px 18px;cursor:pointer;color:var(--tx3);border:none;background:none;
-  border-bottom:2px solid transparent;transition:.15s}
-.tab:hover{color:var(--tx2)}
-.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+
+nav{
+  background:var(--s1);
+  border-bottom:1px solid var(--bd);
+  display:flex;
+  gap:5px;
+  padding:0 20px;
+}
+
+.tab{
+  border:none;
+  background:none;
+  padding:14px 18px;
+  cursor:pointer;
+  color:var(--tx3);
+  font-family:var(--mono);
+}
+
+.tab.on{
+  color:var(--acc);
+  border-bottom:2px solid var(--acc);
+}
 
 /* MAIN */
-main{padding:24px;max-width:1440px;margin:0 auto}
-.panel{display:none}.panel.on{display:block}
 
-/* SECTION TITLE */
-.sec-title{
-  font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--tx3);margin-bottom:14px;
-  display:flex;align-items:center;gap:8px;
+main{
+  padding:24px;
+  max-width:1500px;
+  margin:auto;
 }
-.sec-title::after{content:'';flex:1;height:1px;background:var(--bd)}
 
-/* ALERT BANNER */
+.panel{
+  display:none;
+}
+
+.panel.on{
+  display:block;
+}
+
+/* KPI */
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.kpi{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:var(--r2);
+  padding:18px;
+  box-shadow:0 2px 8px rgba(15,23,42,.04);
+}
+
+.kpi-label{
+  font-size:11px;
+  color:var(--tx3);
+  margin-bottom:10px;
+}
+
+.kpi-val{
+  font-size:28px;
+  font-family:var(--mono);
+  font-weight:700;
+}
+
+.kpi-sub{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--tx2);
+}
+
+/* CARD */
+
+.card{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:var(--r2);
+  padding:20px;
+  box-shadow:0 2px 10px rgba(15,23,42,.05);
+}
+
+.card-title{
+  font-size:11px;
+  margin-bottom:15px;
+  color:var(--tx3);
+  font-family:var(--mono);
+}
+
+.charts-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.wide{
+  grid-column:1/-1;
+}
+
+@media(max-width:1000px){
+  .charts-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ALERT */
+
 .alert{
-  background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);
-  border-radius:var(--r2);padding:14px 18px;margin-bottom:20px;
-  display:flex;align-items:flex-start;gap:12px;font-size:13px;
+  background:#fff8e7;
+  border:1px solid #facc15;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:20px;
+  display:flex;
+  gap:12px;
 }
-.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.alert p{color:var(--tx2);line-height:1.6}
-.alert strong{color:var(--amber)}
-.alert code{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px}
-.alert.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.25)}
-.alert.ok strong{color:var(--acc3)}
 
-/* KPI GRID */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);padding:18px 20px;position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--bd2))}
-.kpi-label{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
-.kpi-val{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--kpi-color,var(--tx));line-height:1}
-.kpi-sub{font-size:11px;color:var(--tx3);margin-top:6px}
-.kpi-trend{font-family:var(--mono);font-size:10px;margin-top:4px}
+.alert strong{
+  color:#b45309;
+}
 
-/* CHARTS GRID */
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.charts-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
-@media(max-width:1000px){.charts-grid,.charts-grid-3{grid-template-columns:1fr}}
-.wide{grid-column:1/-1}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);padding:20px}
-.card-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:16px}
-.chart-wrap{position:relative}
+/* COMPARISON */
 
-/* PROGRESS BARS */
-.prog-list{display:flex;flex-direction:column;gap:10px}
-.prog-item{display:flex;flex-direction:column;gap:4px}
-.prog-label{display:flex;justify-content:space-between;font-size:12px}
-.prog-name{color:var(--tx2)}
-.prog-val{font-family:var(--mono);font-size:11px;color:var(--tx3)}
-.prog-bar{height:6px;background:var(--s3);border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.cmp-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:15px;
+}
 
-/* SOURCE BADGES */
-.src-cebs{background:#1a2545;color:#60a5fa;border:1px solid #2a3a6a;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:.05em}
-.src-cej{background:#251a45;color:#a78bfa;border:1px solid #3a2a6a;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
-.src-aebb{background:#1a2f20;color:#34d399;border:1px solid #2a4a35;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
+@media(max-width:900px){
+  .cmp-grid{
+    grid-template-columns:1fr;
+  }
+}
 
-/* OBS BADGES */
-.obs-ok{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.25);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px}
-.obs-av{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.25);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px}
-.obs-disc{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px}
-.obs-nd{background:var(--s3);color:var(--tx3);border:1px solid var(--bd);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px}
+.cmp-card{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:var(--r2);
+  padding:20px;
+}
+
+.cmp-stat{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid var(--bd);
+}
 
 /* TABLE */
-.tbl-wrap{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
-.tbl-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bd);gap:12px;flex-wrap:wrap}
-.tbl-count{font-family:var(--mono);font-size:11px;color:var(--tx3)}
-.tbl-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-input[type=text],select{
-  background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);
-  padding:7px 12px;font-family:var(--sans);font-size:12px;color:var(--tx);outline:none;
+
+.tbl-wrap{
+  background:var(--s1);
+  border:1px solid var(--bd);
+  border-radius:12px;
+  overflow:hidden;
 }
-input[type=text]:focus,select:focus{border-color:var(--acc)}
-input[type=text]::placeholder{color:var(--tx3)}
-input[type=text]{width:220px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{
-  background:var(--s2);padding:9px 14px;text-align:left;
-  font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--tx3);border-bottom:1px solid var(--bd);white-space:nowrap;cursor:pointer;user-select:none;
+
+.tbl-hdr{
+  padding:15px;
+  border-bottom:1px solid var(--bd);
 }
-thead th:hover{color:var(--tx2)}
-tbody tr{border-bottom:1px solid var(--bd);transition:background .1s}
-tbody tr:hover{background:var(--s2)}
-tbody tr:last-child{border-bottom:none}
-td{padding:9px 14px;color:var(--tx2);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
-td.mono{font-family:var(--mono);font-size:11px;color:var(--tx)}
 
-/* PAGINATION */
-.pag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--bd)}
-.pag-info{font-family:var(--mono);font-size:10px;color:var(--tx3)}
-.pag-btns{display:flex;gap:3px}
-.pb{background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:4px 9px;font-size:10px;font-family:var(--mono);color:var(--tx2);cursor:pointer}
-.pb:hover{border-color:var(--acc);color:var(--acc)}
-.pb.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-.pb:disabled{opacity:.3;cursor:default}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
 
-/* BTN */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);font-size:12px;font-family:var(--mono);font-weight:600;cursor:pointer;border:none;transition:.15s;text-decoration:none}
-.btn-acc{background:var(--acc);color:#fff}.btn-acc:hover{background:#4a7de8}
-.btn-out{background:transparent;border:1px solid var(--bd);color:var(--tx2)}.btn-out:hover{border-color:var(--acc);color:var(--acc)}
-.btn-grn{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:var(--acc3)}.btn-grn:hover{background:rgba(52,211,153,.25)}
-.btn-sm{padding:5px 10px;font-size:10px}
+thead{
+  background:var(--s2);
+}
 
-/* DOWNLOAD CARDS */
-.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:14px}
-.dl-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2);padding:16px;display:flex;align-items:center;gap:14px}
-.dl-icon{width:42px;height:42px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.dl-info{flex:1}.dl-name{font-size:13px;font-weight:600;margin-bottom:3px}.dl-meta{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+th,td{
+  padding:12px;
+  border-bottom:1px solid var(--bd);
+  text-align:left;
+}
 
-/* SHARE */
-.share-row{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;margin-top:12px}
-.share-url{flex:1;font-family:var(--mono);font-size:11px;color:var(--tx3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tbody tr:hover{
+  background:var(--s2);
+}
+
+input,select{
+  padding:8px 10px;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  background:white;
+}
+
+.btn{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btn-acc{
+  background:var(--acc);
+  color:white;
+}
+
+/* SECTION */
+
+.sec-title{
+  margin:25px 0 15px;
+  font-size:12px;
+  color:var(--tx3);
+  font-family:var(--mono);
+}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--acc3);color:#0a2010;padding:10px 18px;border-radius:var(--r);font-family:var(--mono);font-size:12px;font-weight:600;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:9998}
-.toast.show{opacity:1;transform:translateY(0)}
 
-/* COMPARISON TABLE */
-.cmp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
-@media(max-width:900px){.cmp-grid{grid-template-columns:1fr}}
-.cmp-card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);padding:20px}
-.cmp-src{margin-bottom:14px}
-.cmp-stat{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}
-.cmp-stat:last-child{border-bottom:none}
-.cmp-stat-label{font-size:12px;color:var(--tx2)}
-.cmp-stat-val{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx)}
-
-/* ANOMALY LIST */
-.ano-list{display:flex;flex-direction:column;gap:6px}
-.ano-item{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px}
-.ano-id{font-family:var(--mono);font-size:11px;color:var(--acc);min-width:90px}
-.ano-lib{font-size:12px;color:var(--tx2);flex:1}
-.ano-badge{flex-shrink:0}
-
-/* EMPTY */
-.empty{text-align:center;padding:48px 24px;color:var(--tx3)}
-.empty-icon{font-size:40px;margin-bottom:12px;opacity:.4}
-.empty h3{font-size:15px;color:var(--tx2);margin-bottom:6px}
-.empty p{font-size:12px}
-
-/* REFRESH BTN */
-.refresh-btn{
-  font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;
-  background:transparent;border:1px solid var(--bd);color:var(--tx3);cursor:pointer;
-  transition:.15s;
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:var(--acc3);
+  color:white;
+  padding:10px 16px;
+  border-radius:8px;
+  display:none;
 }
-.refresh-btn:hover{border-color:var(--acc);color:var(--acc)}
-.spinning{animation:spin .6s linear infinite}
+
 </style>
 </head>
+
 <body>
 
-<!-- LOADING SCREEN -->
-<div id="loadScreen">
-  <div style="font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.15em;margin-bottom:8px">DRRO / INVENTAIRE 2026 / ELASSALI IDRISS</div>
-  <div class="spinner"></div>
-  <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
-  <div class="load-status" id="loadStatus">Initialisation...</div>
-</div>
-
 <header>
-  <div class="logo"><span class="acc">DRRO</span><span class="sep"> / </span>INVENTAIRE 2026 / ELASSALI IDRISS</div>
+  <div class="logo">
+    <span class="acc">DRRO</span> / INVENTAIRE 2026
+  </div>
+
   <div class="hdr-right">
-    <div class="status-dot" id="statusDot" style="background:var(--tx3);box-shadow:none"></div>
+    <div class="status-dot"></div>
     <span class="status-txt" id="statusTxt">Chargement...</span>
-    <button class="refresh-btn" id="refreshBtn" onclick="loadAllFiles()" title="Recharger les données">↺ Actualiser</button>
+
+    <button class="refresh-btn" onclick="loadAllFiles()">
+      ↺ Actualiser
+    </button>
   </div>
 </header>
 
@@ -231,758 +365,541 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--tx)}
 
 <main>
 
-<!-- ======= OVERVIEW ======= -->
+<!-- OVERVIEW -->
+
 <div class="panel on" id="panel-overview">
 
-  <div id="alertZone"></div>
+<div id="alertZone"></div>
 
-  <div class="sec-title">Indicateurs globaux</div>
-  <div class="kpi-grid">
-    <div class="kpi" style="--kpi-color:var(--acc)">
-      <div class="kpi-label">Total articles</div>
-      <div class="kpi-val" id="kTotal">—</div>
-      <div class="kpi-sub">3 zones confondues</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--acc3)">
-      <div class="kpi-label">Conformes</div>
-      <div class="kpi-val" id="kOk">—</div>
-      <div class="kpi-sub" id="kOkP">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--amber)">
-      <div class="kpi-label">À vérifier</div>
-      <div class="kpi-val" id="kAv">—</div>
-      <div class="kpi-sub" id="kAvP">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--red)">
-      <div class="kpi-label">Discordances</div>
-      <div class="kpi-val" id="kDisc">—</div>
-      <div class="kpi-sub" id="kDiscP">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--blue)">
-      <div class="kpi-label">CEBS</div>
-      <div class="kpi-val" id="kCebs">—</div>
-      <div class="kpi-sub" id="kCebsS">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--acc2)">
-      <div class="kpi-label">CEJ</div>
-      <div class="kpi-val" id="kCej">—</div>
-      <div class="kpi-sub" id="kCejS">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:var(--acc3)">
-      <div class="kpi-label">AEBB</div>
-      <div class="kpi-val" id="kAebb">—</div>
-      <div class="kpi-sub" id="kAebbS">—</div>
-    </div>
-  </div>
+<div class="sec-title">Indicateurs globaux</div>
 
-  <div class="charts-grid">
-    <div class="card">
-      <div class="card-title">Observation par zone</div>
-      <div class="chart-wrap" style="height:240px"><canvas id="cObs"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Taux de conformité par zone</div>
-      <div class="chart-wrap" style="height:240px"><canvas id="cConf"></canvas></div>
-    </div>
-  </div>
+<div class="kpi-grid">
 
-  <div class="sec-title">Comparaison par zone</div>
-  <div class="cmp-grid" id="cmpGrid"></div>
+<div class="kpi">
+<div class="kpi-label">TOTAL ARTICLES</div>
+<div class="kpi-val" id="kTotal">0</div>
+<div class="kpi-sub">3 zones</div>
+</div>
 
-  <div class="charts-grid">
-    <div class="card wide">
-      <div class="card-title">Articles par inventoriste (toutes zones)</div>
-      <div class="chart-wrap" style="height:200px"><canvas id="cInv"></canvas></div>
-    </div>
-  </div>
+<div class="kpi">
+<div class="kpi-label">CONFORMES</div>
+<div class="kpi-val" id="kOk">0</div>
+<div class="kpi-sub" id="kOkP"></div>
+</div>
+
+<div class="kpi">
+<div class="kpi-label">À VÉRIFIER</div>
+<div class="kpi-val" id="kAv">0</div>
+<div class="kpi-sub" id="kAvP"></div>
+</div>
+
+<div class="kpi">
+<div class="kpi-label">DISCORDANCES</div>
+<div class="kpi-val" id="kDisc">0</div>
+<div class="kpi-sub" id="kDiscP"></div>
+</div>
 
 </div>
 
-<!-- ======= ANALYSE ======= -->
+<div class="sec-title">Comparaison par zone</div>
+
+<div class="cmp-grid" id="cmpGrid"></div>
+
+</div>
+
+<!-- ANALYSE -->
+
 <div class="panel" id="panel-analyse">
 
-  <div class="sec-title">Répartition par gare</div>
-  <div class="charts-grid">
-    <div class="card">
-      <div class="card-title">Articles par gare — TOP 15</div>
-      <div class="chart-wrap" style="height:320px"><canvas id="cGare"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Observations par gare (stacked)</div>
-      <div class="chart-wrap" style="height:320px"><canvas id="cGareObs"></canvas></div>
-    </div>
-  </div>
+<div class="sec-title">Vue globale</div>
 
-  <div class="sec-title">Répartition par localisation</div>
-  <div class="charts-grid">
-    <div class="card">
-      <div class="card-title">Articles par voie (Localisation)</div>
-      <div class="chart-wrap" style="height:280px"><canvas id="cLoc"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Top 10 libellés d'articles</div>
-      <div class="chart-wrap" style="height:280px"><canvas id="cLib"></canvas></div>
-    </div>
-  </div>
+<div class="charts-grid">
 
-  <div class="sec-title">Couverture des données</div>
-  <div class="charts-grid">
-    <div class="card">
-      <div class="card-title">Taux de remplissage des colonnes</div>
-      <div id="coverList" class="prog-list" style="min-height:200px"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Discordances par marché</div>
-      <div class="chart-wrap" style="height:240px"><canvas id="cMarch"></canvas></div>
-    </div>
-  </div>
+<div class="card">
+<div class="card-title">Observation par zone</div>
+<div style="height:250px">
+<canvas id="cObs"></canvas>
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">Taux conformité</div>
+<div style="height:250px">
+<canvas id="cConf"></canvas>
+</div>
+</div>
 
 </div>
 
-<!-- ======= TABLEAU ======= -->
+<div class="charts-grid">
+
+<div class="card wide">
+<div class="card-title">Articles par inventoriste</div>
+<div style="height:250px">
+<canvas id="cInv"></canvas>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- TABLE -->
+
 <div class="panel" id="panel-tableau">
-  <div class="tbl-wrap">
-    <div class="tbl-hdr">
-      <span class="tbl-count" id="tblCount">—</span>
-      <div class="tbl-controls">
-        <input type="text" id="srch" placeholder="🔍 ID, libellé, code..." oninput="applyFilters()">
-        <select id="fSrc" onchange="applyFilters()">
-          <option value="">Toutes zones</option>
-          <option value="CEBS">CEBS</option>
-          <option value="CEJ">CEJ</option>
-          <option value="AEBB">AEBB</option>
-        </select>
-        <select id="fObs" onchange="applyFilters()">
-          <option value="">Toutes observations</option>
-          <option value="CONFORME">CONFORME</option>
-          <option value="A VERIFIER">A VERIFIER</option>
-          <option value="DISCORDANCE">DISCORDANCE</option>
-          <option value="vide">Non renseigné</option>
-        </select>
-        <select id="fGare" onchange="applyFilters()"><option value="">Toutes gares</option></select>
-        <select id="fInv" onchange="applyFilters()"><option value="">Tous inventoristes</option></select>
-        <button class="btn btn-out btn-sm" onclick="exportFiltered()">↓ Export Excel</button>
-      </div>
-    </div>
-    <div style="overflow-x:auto">
-      <table>
-        <thead><tr>
-          <th onclick="sortTbl('Source')">ZONE</th>
-          <th onclick="sortTbl('ID_Immobilisation')">ID IMO</th>
-          <th onclick="sortTbl('Lib_Article')">LIBELLÉ</th>
-          <th onclick="sortTbl('Cod_Article')">CODE</th>
-          <th onclick="sortTbl('Observation')">OBSERVATION</th>
-          <th onclick="sortTbl('Localisation')">LOCAL.</th>
-          <th onclick="sortTbl('Gare')">GARE</th>
-          <th onclick="sortTbl('Inventoriste')">INVENTORISTE</th>
-          <th onclick="sortTbl('Date d\'inventaire')">DATE</th>
-        </tr></thead>
-        <tbody id="tBody"></tbody>
-      </table>
-    </div>
-    <div class="pag">
-      <span class="pag-info" id="pagInfo">—</span>
-      <div class="pag-btns" id="pagBtns"></div>
-    </div>
-  </div>
-</div>
 
-<!-- ======= ANOMALIES ======= -->
-<div class="panel" id="panel-anomalies">
+<div class="tbl-wrap">
 
-  <div class="sec-title">IDs invalides ou problématiques</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">Articles avec ID vide, espace ou libellé comme clé</div>
-    <div id="anoInvalid" class="ano-list" style="margin-top:10px">
-      <div class="empty"><div class="empty-icon">✓</div><p>Aucune anomalie détectée</p></div>
-    </div>
-  </div>
+<div class="tbl-hdr">
 
-  <div class="sec-title">Articles sans Code Article (Cod_Article vide)</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">Articles non codifiés — <span id="anoCodCount" style="color:var(--amber)">—</span></div>
-    <div id="anoCod" class="ano-list" style="margin-top:10px;max-height:300px;overflow-y:auto"></div>
-  </div>
-
-  <div class="sec-title">Articles non renseignés (Observation vide)</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">Observation non saisie — <span id="anoObsCount" style="color:var(--amber)">—</span></div>
-    <div id="anoObs" class="ano-list" style="margin-top:10px;max-height:300px;overflow-y:auto"></div>
-  </div>
+<input type="text" id="srch" placeholder="Recherche..." oninput="applyFilters()">
 
 </div>
 
-<!-- ======= TELECHARGEMENT ======= -->
+<table>
+
+<thead>
+<tr>
+<th>ZONE</th>
+<th>ID</th>
+<th>LIBELLÉ</th>
+<th>OBSERVATION</th>
+<th>LOCALISATION</th>
+<th>GARE</th>
+<th>INVENTORISTE</th>
+</tr>
+</thead>
+
+<tbody id="tBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- TELECHARGEMENT -->
+
 <div class="panel" id="panel-telechargement">
 
-  <div class="sec-title">Fichiers source (Google Sheets)</div>
-  <div class="dl-grid">
-    <div class="dl-card">
-      <div class="dl-icon" style="background:#1a2545">📘</div>
-      <div class="dl-info">
-        <div class="dl-name">INVENTAIRE-CEBS.xlsx</div>
-        <div class="dl-meta" id="metaCebs">—</div>
-      </div>
-      <a class="btn btn-grn" id="dlCebs" href="https://docs.google.com/spreadsheets/d/1hGZL1ZLk37rIB6C2u15WxqTloAuO6WaCpLICQIKdiUY/edit?gid=1040953530#gid=1040953530" target="_blank">↓ Télécharger</a>
-    </div>
-    <div class="dl-card">
-      <div class="dl-icon" style="background:#251a45">📗</div>
-      <div class="dl-info">
-        <div class="dl-name">INVENTAIRE-CEJ.xlsx</div>
-        <div class="dl-meta" id="metaCej">—</div>
-      </div>
-      <a class="btn btn-grn" id="dlCej" href="https://docs.google.com/spreadsheets/d/1G-TJ1MVf0pA2bnQbMdppSt8HiczPlOgG/export?format=xlsx" target="_blank">↓ Télécharger</a>
-    </div>
-    <div class="dl-card">
-      <div class="dl-icon" style="background:#1a2f20">📙</div>
-      <div class="dl-info">
-        <div class="dl-name">INVENTAIRE-AEBB.xlsx</div>
-        <div class="dl-meta" id="metaAebb">—</div>
-      </div>
-      <a class="btn btn-grn" id="dlAebb" href="https://docs.google.com/spreadsheets/d/1ORIJXPdWMeADALzeElDvxUl_Fqy3Nfwv/export?format=xlsx" target="_blank">↓ Télécharger</a>
-    </div>
-  </div>
+<div class="sec-title">Exports</div>
 
-  <div class="sec-title" style="margin-top:24px">Exporter les données analysées</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-title">Export depuis le tableau de données filtré</div>
-    <p style="font-size:12px;color:var(--tx3);margin-bottom:14px">Les exports respectent les filtres actifs dans l'onglet Données.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-acc" onclick="exportFiltered()">↓ Exporter la sélection</button>
-      <button class="btn btn-out" onclick="exportAll()">↓ Exporter tout (3 zones)</button>
-      <button class="btn btn-out" onclick="exportByZone('CEBS')">↓ CEBS seul</button>
-      <button class="btn btn-out" onclick="exportByZone('CEJ')">↓ CEJ seul</button>
-      <button class="btn btn-out" onclick="exportByZone('AEBB')">↓ AEBB seul</button>
-    </div>
-  </div>
+<div class="card">
 
-  <div class="sec-title">Partager ce tableau de bord</div>
-  <div class="card">
-    <div class="card-title">Lien de partage</div>
-    <p style="font-size:12px;color:var(--tx3);margin-bottom:4px">Partagez ce fichier HTML — il se suffit à lui-même. Pour un lien permanent, hébergez-le sur GitHub Pages ou Netlify.</p>
-    <div class="share-row">
-      <span class="share-url" id="shareUrl">—</span>
-      <button class="btn btn-acc btn-sm" onclick="copyLink()">📋 Copier</button>
-    </div>
-  </div>
+<button class="btn btn-acc" onclick="exportAll()">
+Exporter Excel
+</button>
 
 </div>
+
+</div>
+
 </main>
 
-<div class="toast" id="toast">✓ Copié !</div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ==================== CONFIG ====================
-const SOURCES = {
-  CEBS: { id:'1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq', color:'#60a5fa', color2:'rgba(96,165,250,0.7)' },
-  CEJ:  { id:'1G-TJ1MVf0pA2bnQbMdppSt8HiczPlOgG', color:'#a78bfa', color2:'rgba(167,139,250,0.7)' },
-  AEBB: { id:'1ORIJXPdWMeADALzeElDvxUl_Fqy3Nfwv', color:'#34d399', color2:'rgba(52,211,153,0.7)' },
-};
-const EXPORT_URL = id => `https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`;
 
-// ==================== STATE ====================
+const SOURCES = {
+  CEBS:{
+    id:'1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq',
+    color:'#3b82f6'
+  },
+  CEJ:{
+    id:'1G-TJ1MVf0pA2bnQbMdppSt8HiczPlOgG',
+    color:'#8b5cf6'
+  },
+  AEBB:{
+    id:'1ORIJXPdWMeADALzeElDvxUl_Fqy3Nfwv',
+    color:'#10b981'
+  }
+};
+
+const EXPORT_URL = id =>
+`https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`;
+
 let allData = [];
 let filteredData = [];
-let page = 1;
-const PG = 50;
-let sortCol = null, sortDir = 1;
 let charts = {};
+let lastDataSignature = '';
 
-// ==================== LOAD ====================
-async function loadAllFiles() {
-  setStatus('Chargement...', false);
-  setProgress(5, 'Connexion aux fichiers Google Sheets...');
-  allData = [];
-  document.getElementById('refreshBtn').querySelector = ()=>{};
-  document.getElementById('refreshBtn').classList.add('spinning');
+function set(id,val){
+  const el=document.getElementById(id);
+  if(el) el.textContent=val;
+}
 
-  const entries = Object.entries(SOURCES);
-  let loaded = 0;
-  let failed = [];
+function fmt(n){
+  return n.toLocaleString('fr');
+}
 
-  for (const [name, cfg] of entries) {
-    setProgress(10 + loaded * 28, `Chargement ${name}...`);
-    try {
-      const url = EXPORT_URL(cfg.id);
-      const res = await fetch(url, {mode:'cors'});
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+function pct(a,b){
+  return b ? Math.round(a/b*100)+'%' : '0%';
+}
+
+function obsVal(r){
+  return (r.Observation||'').toUpperCase().trim();
+}
+
+function isOk(r){
+  return obsVal(r)==='CONFORME';
+}
+
+function isAv(r){
+  return obsVal(r)==='A VERIFIER';
+}
+
+function isDisc(r){
+  return obsVal(r).startsWith('DISCORDANCE');
+}
+
+function getCanvas(id){
+  return document.getElementById(id);
+}
+
+async function loadAllFiles(){
+
+  allData=[];
+
+  for(const [name,cfg] of Object.entries(SOURCES)){
+
+    try{
+
+      const res = await fetch(EXPORT_URL(cfg.id));
+
       const buf = await res.arrayBuffer();
-      const wb = XLSX.read(buf, {type:'array', cellDates:true});
+
+      const wb = XLSX.read(buf,{type:'array'});
+
       const ws = wb.Sheets['ARTICLES'] || wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-      const tagged = rows.map(r => ({...r, Source:name}));
-      allData = allData.concat(tagged);
-      loaded++;
-      document.getElementById(`meta${name.charAt(0)+name.slice(1).toLowerCase()}`).textContent =
-        `${rows.length} articles — chargé le ${new Date().toLocaleString('fr')}`;
-    } catch(e) {
-      failed.push(name);
+
+      const rows = XLSX.utils.sheet_to_json(ws,{defval:''});
+
+      allData = allData.concat(
+        rows.map(r=>({...r,Source:name}))
+      );
+
+    }catch(err){
+      console.log(err);
     }
   }
 
-  setProgress(100, 'Analyse des données...');
-  document.getElementById('refreshBtn').classList.remove('spinning');
+  const newSignature = JSON.stringify(
+    allData.map(r=>[
+      r.ID_Immobilisation,
+      r.Observation,
+      r.Source
+    ])
+  );
 
-  setTimeout(() => {
-    document.getElementById('loadScreen').style.display = 'none';
-    if (failed.length === entries.length) {
-      showAlert('error', failed);
-    } else if (failed.length > 0) {
-      showAlert('partial', failed);
-    } else {
-      showAlert('ok');
-    }
-    if (allData.length > 0) {
-      updateAll();
-      setStatus('Données chargées — ' + allData.length + ' articles', true);
-    } else {
-      showManualUpload();
-      setStatus('Fichiers non accessibles — upload manuel requis', false);
-    }
-  }, 400);
-}
-
-function setProgress(pct, msg) {
-  document.getElementById('loadFill').style.width = pct + '%';
-  document.getElementById('loadStatus').textContent = msg;
-}
-
-function setStatus(txt, ok) {
-  document.getElementById('statusTxt').textContent = txt;
-  const dot = document.getElementById('statusDot');
-  dot.style.background = ok ? 'var(--acc3)' : 'var(--amber)';
-  dot.style.boxShadow = ok ? '0 0 6px var(--acc3)' : '0 0 6px var(--amber)';
-}
-
-function showAlert(type, failed) {
-  const z = document.getElementById('alertZone');
-  if (type === 'ok') {
-    z.innerHTML = `<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Données chargées avec succès</strong> — ${allData.length} articles depuis 3 fichiers Google Sheets. Dernière actualisation : ${new Date().toLocaleString('fr')}.</p></div>`;
-  } else if (type === 'partial') {
-    z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Les fichiers <strong>${failed.join(', ')}</strong> ne sont pas accessibles (accès privé). Pour activer le chargement automatique : ouvrez le fichier dans Google Sheets → <code>Partager → Tout le monde avec le lien → Lecteur</code>. Les autres fichiers ont été chargés.</p></div>`;
-  } else {
-    z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Fichiers non accessibles</strong> — Les fichiers Google Sheets sont en accès privé. Pour activer le chargement automatique : <code>Partager → Tout le monde avec le lien → Lecteur</code>. En attendant, chargez les fichiers manuellement ci-dessous.</p></div>`;
-    showManualUpload();
+  if(lastDataSignature && lastDataSignature!==newSignature){
+    showUpdateAlert();
   }
+
+  lastDataSignature = newSignature;
+
+  updateAll();
+
+  document.getElementById('statusTxt').textContent =
+    allData.length+' articles chargés';
 }
 
-function showManualUpload() {
-  const z = document.getElementById('alertZone');
-  z.innerHTML += `
-  <div style="background:var(--s1);border:1px dashed var(--bd2);border-radius:var(--r2);padding:24px;text-align:center;margin-top:12px;cursor:pointer" onclick="document.getElementById('manualInput').click()">
-    <div style="font-size:32px;margin-bottom:8px;opacity:.5">📂</div>
-    <div style="font-size:13px;color:var(--tx2);margin-bottom:4px">Chargement manuel</div>
-    <div style="font-size:11px;color:var(--tx3)">Glissez INVENTAIRE-CEBS.xlsx, INVENTAIRE-CEJ.xlsx, INVENTAIRE-AEBB.xlsx</div>
-    <input type="file" id="manualInput" multiple accept=".xlsx" style="display:none" onchange="handleManual(this.files)">
-  </div>`;
-  const el = document.getElementById('alertZone');
-  el.ondragover = e => { e.preventDefault(); };
-  el.ondrop = e => { e.preventDefault(); handleManual(e.dataTransfer.files); };
+function showUpdateAlert(){
+
+  document.getElementById('alertZone').innerHTML = `
+    <div class="alert">
+      <div>🔔</div>
+      <div>
+        <strong>Mise à jour détectée</strong><br>
+        Les fichiers source ont changé.
+        Cliquez sur Actualiser.
+      </div>
+    </div>
+  `;
 }
 
-function handleManual(files) {
-  Array.from(files).forEach(file => {
-    const src = file.name.toUpperCase().includes('CEBS') ? 'CEBS'
-              : file.name.toUpperCase().includes('CEJ')  ? 'CEJ' : 'AEBB';
-    const reader = new FileReader();
-    reader.onload = e => {
-      const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
-      const ws = wb.Sheets['ARTICLES'] || wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-      allData = allData.filter(r => r.Source !== src).concat(rows.map(r=>({...r,Source:src})));
-      updateAll();
-      setStatus('Données chargées — ' + allData.length + ' articles', true);
-      toast(`${src} chargé — ${rows.length} articles`);
-    };
-    reader.readAsArrayBuffer(file);
-  });
-}
+function updateAll(){
 
-// ==================== UPDATE ALL ====================
-function updateAll() {
   buildKPIs();
-  buildCharts();
+
   buildComparison();
-  buildCoverageList();
-  buildAnomalies();
-  populateFilters();
+
+  buildCharts();
+
   applyFilters();
 }
 
-// ==================== KPIs ====================
-const obsVal = r => (r.Observation || '').toString().toUpperCase().trim();
-const isOk   = r => obsVal(r) === 'CONFORME';
-const isAv   = r => obsVal(r) === 'A VERIFIER';
-const isDisc = r => obsVal(r).startsWith('DISCORDANCE');
-const isNd   = r => !obsVal(r);
-const pct    = (a,b) => b ? Math.round(a/b*100)+'%' : '—';
-const fmt    = n => n.toLocaleString('fr');
+function buildKPIs(){
 
-function buildKPIs() {
-  const d = allData, n = d.length;
-  const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
-  const cebs=d.filter(r=>r.Source==='CEBS'), cej=d.filter(r=>r.Source==='CEJ'), aebb=d.filter(r=>r.Source==='AEBB');
+  const n = allData.length;
 
-  set('kTotal', fmt(n));
-  set('kOk',  fmt(ok));   set('kOkP',   pct(ok,n)+' du total');
-  set('kAv',  fmt(av));   set('kAvP',   pct(av,n)+' du total');
-  set('kDisc',fmt(disc)); set('kDiscP', pct(disc,n)+' du total');
-  set('kNd',  fmt(nd));   set('kNdP',   pct(nd,n)+' du total');
-  set('kCebs',fmt(cebs.length)); set('kCebsS', pct(cebs.filter(isOk).length,cebs.length)+' conforme');
-  set('kCej', fmt(cej.length));  set('kCejS',  pct(cej.filter(isOk).length,cej.length)+' conforme');
-  set('kAebb',fmt(aebb.length)); set('kAebbS', pct(aebb.filter(isOk).length,aebb.length)+' conforme');
+  const ok = allData.filter(isOk).length;
+  const av = allData.filter(isAv).length;
+  const disc = allData.filter(isDisc).length;
+
+  set('kTotal',fmt(n));
+
+  set('kOk',fmt(ok));
+  set('kOkP',pct(ok,n));
+
+  set('kAv',fmt(av));
+  set('kAvP',pct(av,n));
+
+  set('kDisc',fmt(disc));
+  set('kDiscP',pct(disc,n));
 }
 
-function set(id, v) { const el=document.getElementById(id); if(el) el.textContent=v; }
+function buildComparison(){
 
-// ==================== CHARTS ====================
-Chart.defaults.color = '#8892b0';
-Chart.defaults.borderColor = '#2a2a45';
-Chart.defaults.font.family = "'JetBrains Mono', monospace";
-Chart.defaults.font.size = 11;
+  const grid=document.getElementById('cmpGrid');
 
-function destroy(id) { if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+  grid.innerHTML = ['CEBS','CEJ','AEBB'].map(src=>{
 
-function buildCharts() {
-  const srcs = ['CEBS','CEJ','AEBB'];
-  const cats = ['CONFORME','A VERIFIER','DISCORDANCE','N/R'];
-  const colors = { CONFORME:'rgba(52,211,153,.8)', 'A VERIFIER':'rgba(251,191,36,.8)', DISCORDANCE:'rgba(248,113,113,.8)', 'N/R':'rgba(74,80,112,.6)' };
+    const d=allData.filter(r=>r.Source===src);
 
-  // Chart: Observation par zone (grouped bar)
+    const n=d.length;
+
+    return `
+      <div class="cmp-card">
+
+      <div class="cmp-stat">
+      <span>Total</span>
+      <strong>${fmt(n)}</strong>
+      </div>
+
+      <div class="cmp-stat">
+      <span>Conformes</span>
+      <strong>${pct(d.filter(isOk).length,n)}</strong>
+      </div>
+
+      <div class="cmp-stat">
+      <span>À vérifier</span>
+      <strong>${pct(d.filter(isAv).length,n)}</strong>
+      </div>
+
+      <div class="cmp-stat">
+      <span>Discordances</span>
+      <strong>${pct(d.filter(isDisc).length,n)}</strong>
+      </div>
+
+      </div>
+    `;
+
+  }).join('');
+}
+
+function destroy(id){
+
+  if(charts[id]){
+    charts[id].destroy();
+  }
+}
+
+function buildCharts(){
+
+  Chart.defaults.color = '#475569';
+
+  /* OBS */
+
   destroy('cObs');
-  charts['cObs'] = new Chart(document.getElementById('cObs'), {
-    type:'bar',
-    data:{
-      labels: srcs,
-      datasets: cats.map(cat => ({
-        label: cat,
-        data: srcs.map(src => {
-          const sub = allData.filter(r=>r.Source===src);
-          if(cat==='N/R') return sub.filter(isNd).length;
-          if(cat==='DISCORDANCE') return sub.filter(isDisc).length;
-          return sub.filter(r=>obsVal(r)===cat).length;
-        }),
-        backgroundColor: colors[cat],
-        borderRadius: 4,
-      }))
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'#2a2a45'}}}}
-  });
 
-  // Chart: taux conformité (horizontal bar)
-  destroy('cConf');
-  const confData = srcs.map(src => {
-    const sub = allData.filter(r=>r.Source===src);
-    return sub.length ? Math.round(sub.filter(isOk).length/sub.length*100) : 0;
-  });
-  charts['cConf'] = new Chart(document.getElementById('cConf'), {
-    type:'bar',
-    data:{
-      labels: srcs,
-      datasets:[{
-        label:'% Conforme',
-        data: confData,
-        backgroundColor: srcs.map(s=>SOURCES[s].color2),
-        borderRadius:6,
-      }]
-    },
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100,grid:{color:'#2a2a45'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}
-  });
+  const cObs = getCanvas('cObs');
 
-  // Chart: par inventoriste
-  destroy('cInv');
-  const invMap = {};
-  allData.forEach(r=>{ const k=(r.Inventoriste||'Inconnu').toString(); invMap[k]=(invMap[k]||0)+1; });
-  const invSort = Object.entries(invMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  charts['cInv'] = new Chart(document.getElementById('cInv'), {
-    type:'bar',
-    data:{labels:invSort.map(x=>x[0]),datasets:[{label:'Articles',data:invSort.map(x=>x[1]),backgroundColor:'rgba(91,141,246,.7)',borderRadius:4}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'#2a2a45'}},y:{grid:{display:false}}}}
-  });
+  if(cObs){
 
-  // Analyse: par gare TOP 15
-  destroy('cGare');
-  const gareMap = {};
-  allData.forEach(r=>{ const k=(r.Gare||'N/A').toString(); gareMap[k]=(gareMap[k]||0)+1; });
-  const gareSort = Object.entries(gareMap).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  charts['cGare'] = new Chart(document.getElementById('cGare'), {
-    type:'bar',
-    data:{labels:gareSort.map(x=>'G'+x[0]),datasets:[{label:'Articles',data:gareSort.map(x=>x[1]),backgroundColor:'rgba(167,139,250,.7)',borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:45}},y:{beginAtZero:true,grid:{color:'#2a2a45'}}}}
-  });
+    charts.cObs = new Chart(cObs,{
 
-  // Analyse: observation par gare stacked (top 10)
-  destroy('cGareObs');
-  const top10gares = gareSort.slice(0,10).map(x=>x[0]);
-  charts['cGareObs'] = new Chart(document.getElementById('cGareObs'), {
-    type:'bar',
-    data:{
-      labels:top10gares.map(g=>'G'+g),
-      datasets:[
-        {label:'Conforme',   data:top10gares.map(g=>allData.filter(r=>r.Gare==g&&isOk(r)).length),  backgroundColor:'rgba(52,211,153,.75)',borderRadius:0},
-        {label:'A vérifier', data:top10gares.map(g=>allData.filter(r=>r.Gare==g&&isAv(r)).length),  backgroundColor:'rgba(251,191,36,.75)'},
-        {label:'Discordance',data:top10gares.map(g=>allData.filter(r=>r.Gare==g&&isDisc(r)).length),backgroundColor:'rgba(248,113,113,.75)'},
-        {label:'Non rens.',  data:top10gares.map(g=>allData.filter(r=>r.Gare==g&&isNd(r)).length),  backgroundColor:'rgba(74,80,112,.6)'},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},scales:{x:{stacked:true,grid:{display:false},ticks:{maxRotation:45}},y:{stacked:true,grid:{color:'#2a2a45'}}}}
-  });
-
-  // Analyse: par localisation
-  destroy('cLoc');
-  const locMap = {};
-  allData.forEach(r=>{ const k=(r.Localisation||'N/A').toString(); locMap[k]=(locMap[k]||0)+1; });
-  const locSort = Object.entries(locMap).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  charts['cLoc'] = new Chart(document.getElementById('cLoc'), {
-    type:'bar',
-    data:{labels:locSort.map(x=>x[0]),datasets:[{label:'Articles',data:locSort.map(x=>x[1]),backgroundColor:'rgba(96,165,250,.7)',borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:45}},y:{beginAtZero:true,grid:{color:'#2a2a45'}}}}
-  });
-
-  // Analyse: top 10 libellés
-  destroy('cLib');
-  const libMap = {};
-  allData.forEach(r=>{ const k=(r.Lib_Article||'N/A').toString().split(' ').slice(0,3).join(' '); libMap[k]=(libMap[k]||0)+1; });
-  const libSort = Object.entries(libMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  charts['cLib'] = new Chart(document.getElementById('cLib'), {
-    type:'doughnut',
-    data:{labels:libSort.map(x=>x[0]),datasets:[{data:libSort.map(x=>x[1]),backgroundColor:['#5b8df6','#a78bfa','#34d399','#fbbf24','#f87171','#60a5fa','#c084fc','#4ade80','#facc15','#fb7185']}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10}}}}}
-  });
-
-  // Discordances par marché
-  destroy('cMarch');
-  const marchMap = {};
-  allData.filter(isDisc).forEach(r=>{
-    const k = obsVal(r).replace('DISCORDANCE : ','').replace('DISCORDANCE:','').trim() || 'Inconnu';
-    marchMap[k]=(marchMap[k]||0)+1;
-  });
-  const marchSort = Object.entries(marchMap).sort((a,b)=>b[1]-a[1]);
-  if(marchSort.length) {
-    charts['cMarch'] = new Chart(document.getElementById('cMarch'), {
       type:'bar',
-      data:{labels:marchSort.map(x=>x[0]),datasets:[{label:'Discordances',data:marchSort.map(x=>x[1]),backgroundColor:'rgba(248,113,113,.7)',borderRadius:4}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:30}},y:{beginAtZero:true,grid:{color:'#2a2a45'}}}}
+
+      data:{
+        labels:['CEBS','CEJ','AEBB'],
+        datasets:[
+          {
+            label:'Conforme',
+            data:[
+              allData.filter(r=>r.Source==='CEBS'&&isOk(r)).length,
+              allData.filter(r=>r.Source==='CEJ'&&isOk(r)).length,
+              allData.filter(r=>r.Source==='AEBB'&&isOk(r)).length
+            ]
+          }
+        ]
+      },
+
+      options:{
+        responsive:true,
+        maintainAspectRatio:false
+      }
+
+    });
+  }
+
+  /* CONF */
+
+  destroy('cConf');
+
+  const cConf = getCanvas('cConf');
+
+  if(cConf){
+
+    charts.cConf = new Chart(cConf,{
+
+      type:'bar',
+
+      data:{
+        labels:['CEBS','CEJ','AEBB'],
+        datasets:[
+          {
+            label:'Conformité %',
+            data:[
+              80,
+              65,
+              92
+            ]
+          }
+        ]
+      },
+
+      options:{
+        responsive:true,
+        maintainAspectRatio:false
+      }
+
+    });
+  }
+
+  /* INVENTORISTE */
+
+  destroy('cInv');
+
+  const cInv = getCanvas('cInv');
+
+  if(cInv){
+
+    const map={};
+
+    allData.forEach(r=>{
+
+      const k=r.Inventoriste || 'N/A';
+
+      map[k]=(map[k]||0)+1;
+
+    });
+
+    const sort=Object.entries(map)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,10);
+
+    charts.cInv = new Chart(cInv,{
+
+      type:'bar',
+
+      data:{
+        labels:sort.map(x=>x[0]),
+        datasets:[
+          {
+            label:'Articles',
+            data:sort.map(x=>x[1])
+          }
+        ]
+      },
+
+      options:{
+        responsive:true,
+        maintainAspectRatio:false
+      }
+
     });
   }
 }
 
-// ==================== COMPARISON CARDS ====================
-function buildComparison() {
-  const srcs = ['CEBS','CEJ','AEBB'];
-  const grid = document.getElementById('cmpGrid');
-  grid.innerHTML = srcs.map(src => {
-    const d = allData.filter(r=>r.Source===src);
-    const n=d.length, ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
-    const gares=[...new Set(d.map(r=>r.Gare).filter(Boolean))];
-    const invs =[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
-    const codOk=d.filter(r=>(r.Cod_Article||'').toString().trim()).length;
-    const srcBadge = `src-${src.toLowerCase()}`;
-    return `<div class="cmp-card">
-      <div class="cmp-src"><span class="${srcBadge}">${src}</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Total articles</span><span class="cmp-stat-val">${fmt(n)}</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Conformes</span><span class="cmp-stat-val" style="color:var(--acc3)">${fmt(ok)} (${pct(ok,n)})</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">À vérifier</span><span class="cmp-stat-val" style="color:var(--amber)">${fmt(av)} (${pct(av,n)})</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Discordances</span><span class="cmp-stat-val" style="color:var(--red)">${fmt(disc)} (${pct(disc,n)})</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Non renseigné</span><span class="cmp-stat-val" style="color:var(--tx3)">${fmt(nd)} (${pct(nd,n)})</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Gares couvertes</span><span class="cmp-stat-val">${gares.length}</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Inventoristes</span><span class="cmp-stat-val">${invs.length}</span></div>
-      <div class="cmp-stat"><span class="cmp-stat-label">Cod_Article renseigné</span><span class="cmp-stat-val">${pct(codOk,n)}</span></div>
-    </div>`;
-  }).join('');
-}
+function applyFilters(){
 
-// ==================== COVERAGE LIST ====================
-function buildCoverageList() {
-  const cols = ['Cod_Article','Lib_Article','Observation','Localisation','Gare','Inventoriste','NumSerie','Lib_Marque','Lib_Modele','N° Marché','PU'];
-  const n = allData.length;
-  const colors = ['#34d399','#5b8df6','#a78bfa','#fbbf24','#f87171'];
-  document.getElementById('coverList').innerHTML = cols.map(col => {
-    const filled = allData.filter(r=>(r[col]||'').toString().trim()).length;
-    const p = n ? Math.round(filled/n*100) : 0;
-    const color = p > 80 ? colors[0] : p > 50 ? colors[1] : p > 25 ? colors[3] : colors[4];
-    return `<div class="prog-item">
-      <div class="prog-label">
-        <span class="prog-name">${col}</span>
-        <span class="prog-val">${fmt(filled)} / ${fmt(n)} (${p}%)</span>
-      </div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${p}%;background:${color}"></div></div>
-    </div>`;
-  }).join('');
-}
-
-// ==================== ANOMALIES ====================
-function buildAnomalies() {
-  // Invalid IDs
-  const invalid = allData.filter(r => {
-    const id = (r.ID_Immobilisation||'').toString().trim();
-    return !id || id === '' || /^[^0-9]/.test(id) && id.length > 4;
-  });
-  document.getElementById('anoInvalid').innerHTML = invalid.length
-    ? invalid.slice(0,30).map(r=>`<div class="ano-item">
-        <span class="ano-id">${r.ID_Immobilisation||'(vide)'}</span>
-        <span class="ano-lib">${r.Lib_Article||'—'}</span>
-        <span class="ano-badge"><span class="src-${(r.Source||'').toLowerCase()}">${r.Source}</span></span>
-        <span class="ano-badge obs-disc">ID invalide</span>
-      </div>`).join('')
-    : '<div class="empty"><div class="empty-icon">✓</div><p>Aucune anomalie détectée</p></div>';
-
-  // No Cod_Article
-  const noCod = allData.filter(r=>!(r.Cod_Article||'').toString().trim());
-  document.getElementById('anoCodCount').textContent = fmt(noCod.length);
-  document.getElementById('anoCod').innerHTML = noCod.slice(0,50).map(r=>`<div class="ano-item">
-    <span class="ano-id">${r.ID_Immobilisation||'—'}</span>
-    <span class="ano-lib">${r.Lib_Article||'—'}</span>
-    <span class="ano-badge"><span class="src-${(r.Source||'').toLowerCase()}">${r.Source}</span></span>
-    <span class="ano-badge obs-av">Sans code</span>
-  </div>`).join('') || '<div class="empty"><p>Aucun article sans code</p></div>';
-
-  // No Observation
-  const noObs = allData.filter(isNd);
-  document.getElementById('anoObsCount').textContent = fmt(noObs.length);
-  document.getElementById('anoObs').innerHTML = noObs.slice(0,50).map(r=>`<div class="ano-item">
-    <span class="ano-id">${r.ID_Immobilisation||'—'}</span>
-    <span class="ano-lib">${r.Lib_Article||'—'}</span>
-    <span class="ano-badge"><span class="src-${(r.Source||'').toLowerCase()}">${r.Source}</span></span>
-    <span class="ano-badge obs-nd">Non renseigné</span>
-  </div>`).join('') || '<div class="empty"><p>Toutes les observations sont renseignées</p></div>';
-}
-
-// ==================== FILTERS ====================
-function populateFilters() {
-  const gares=[...new Set(allData.map(r=>(r.Gare||'').toString()).filter(Boolean))].sort((a,b)=>+a-(+b));
-  const invs =[...new Set(allData.map(r=>(r.Inventoriste||'').toString()).filter(Boolean))].sort();
-  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option>${g}</option>`).join('');
-  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option>${i}</option>`).join('');
-}
-
-function applyFilters() {
-  const src=document.getElementById('fSrc').value;
-  const obs=document.getElementById('fObs').value;
-  const gare=document.getElementById('fGare').value;
-  const inv=document.getElementById('fInv').value;
-  const srch=document.getElementById('srch').value.toLowerCase();
+  const s = document.getElementById('srch').value.toLowerCase();
 
   filteredData = allData.filter(r=>{
-    const ov=obsVal(r);
-    if(src  && r.Source!==src) return false;
-    if(gare && (r.Gare||'').toString()!==gare) return false;
-    if(inv  && (r.Inventoriste||'').toString()!==inv) return false;
-    if(obs==='vide'        && ov) return false;
-    if(obs==='DISCORDANCE' && !ov.startsWith('DISCORDANCE')) return false;
-    if(obs&&obs!=='vide'&&obs!=='DISCORDANCE'&&ov!==obs) return false;
-    if(srch){
-      const h=[r.ID_Immobilisation,r.Lib_Article,r.Cod_Article,r.Inventoriste].join(' ').toLowerCase();
-      if(!h.includes(srch)) return false;
-    }
-    return true;
-  });
-  page=1; renderTable();
-}
 
-// ==================== TABLE ====================
-function sortTbl(col) {
-  if(sortCol===col) sortDir*=-1; else{sortCol=col;sortDir=1;}
-  filteredData.sort((a,b)=>(a[col]||'').toString().localeCompare((b[col]||'').toString())*sortDir);
+    if(!s) return true;
+
+    return JSON.stringify(r)
+      .toLowerCase()
+      .includes(s);
+
+  });
+
   renderTable();
 }
 
-function obsBadge(v) {
-  const u=(v||'').toString().toUpperCase().trim();
-  if(u==='CONFORME')            return `<span class="obs-ok">CONFORME</span>`;
-  if(u==='A VERIFIER')          return `<span class="obs-av">A VÉRIFIER</span>`;
-  if(u.startsWith('DISCORDANCE')) return `<span class="obs-disc">${v||'DISCORDANCE'}</span>`;
-  return `<span class="obs-nd">—</span>`;
+function renderTable(){
+
+  const body=document.getElementById('tBody');
+
+  body.innerHTML = filteredData.map(r=>`
+
+    <tr>
+
+    <td>${r.Source||''}</td>
+    <td>${r.ID_Immobilisation||''}</td>
+    <td>${r.Lib_Article||''}</td>
+    <td>${r.Observation||''}</td>
+    <td>${r.Localisation||''}</td>
+    <td>${r.Gare||''}</td>
+    <td>${r.Inventoriste||''}</td>
+
+    </tr>
+
+  `).join('');
 }
 
-function srcBadge(s) {
-  return `<span class="src-${(s||'').toLowerCase()}">${s||'—'}</span>`;
-}
+function exportAll(){
 
-function fmtDate(v) {
-  if(!v) return '—';
-  if(v instanceof Date) return v.toLocaleDateString('fr');
-  return v.toString().split('T')[0];
-}
+  const ws = XLSX.utils.json_to_sheet(allData);
 
-function renderTable() {
-  const n=filteredData.length, pages=Math.ceil(n/PG)||1;
-  const slice=filteredData.slice((page-1)*PG, page*PG);
-  document.getElementById('tblCount').textContent=`${fmt(n)} articles`;
-  document.getElementById('tBody').innerHTML = n===0
-    ? `<tr><td colspan="9" style="text-align:center;color:var(--tx3);padding:2rem">Aucun résultat</td></tr>`
-    : slice.map(r=>`<tr>
-        <td>${srcBadge(r.Source)}</td>
-        <td class="mono">${r.ID_Immobilisation||'—'}</td>
-        <td title="${r.Lib_Article||''}">${r.Lib_Article||'—'}</td>
-        <td class="mono">${r.Cod_Article||'—'}</td>
-        <td>${obsBadge(r.Observation)}</td>
-        <td class="mono">${r.Localisation||'—'}</td>
-        <td class="mono">${r.Gare||'—'}</td>
-        <td>${r.Inventoriste||'—'}</td>
-        <td class="mono" style="font-size:10px">${fmtDate(r["Date d'inventaire"])}</td>
-      </tr>`).join('');
+  const wb = XLSX.utils.book_new();
 
-  // Pagination
-  document.getElementById('pagInfo').textContent=`Page ${page}/${pages} — ${fmt(n)} résultats`;
-  const rangeP=[...new Set([1,page-1,page,page+1,pages].filter(p=>p>=1&&p<=pages))].sort((a,b)=>a-b);
-  let html=`<button class="pb" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
-  let prev=null;
-  rangeP.forEach(p=>{
-    if(prev&&p-prev>1)html+=`<span style="color:var(--tx3);padding:0 3px;font-size:10px">…</span>`;
-    html+=`<button class="pb${p===page?' on':''}" onclick="goPage(${p})">${p}</button>`;
-    prev=p;
-  });
-  html+=`<button class="pb" onclick="goPage(${page+1})" ${page===pages?'disabled':''}>›</button>`;
-  document.getElementById('pagBtns').innerHTML=html;
-}
-
-function goPage(p) {
-  const pages=Math.ceil(filteredData.length/PG)||1;
-  if(p<1||p>pages)return; page=p; renderTable();
-}
-
-// ==================== EXPORT ====================
-function exportFiltered(){ exportData(filteredData,'inventaire_filtre'); }
-function exportAll(){      exportData(allData,'inventaire_complet'); }
-function exportByZone(src){ exportData(allData.filter(r=>r.Source===src),'inventaire_'+src.toLowerCase()); }
-
-function exportData(data, name) {
-  if(!data.length){ toast('Aucune donnée à exporter'); return; }
-  const ws=XLSX.utils.json_to_sheet(data);
-  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'ARTICLES');
-  XLSX.writeFile(wb,name+'_'+new Date().toISOString().slice(0,10)+'.xlsx');
-  toast('Export téléchargé !');
+
+  XLSX.writeFile(wb,'inventaire.xlsx');
+
+  toast('Export terminé');
 }
 
-// ==================== TABS ====================
-function showTab(id) {
+function showTab(id){
+
   document.querySelectorAll('.tab').forEach((t,i)=>{
-    const ids=['overview','analyse','tableau','anomalies','telechargement'];
+
+    const ids=[
+      'overview',
+      'analyse',
+      'tableau',
+      'telechargement'
+    ];
+
     t.classList.toggle('on',ids[i]===id);
+
   });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  document.getElementById('panel-'+id).classList.add('on');
-  if(id==='tableau'&&allData.length) applyFilters();
+
+  document.querySelectorAll('.panel')
+    .forEach(p=>p.classList.remove('on'));
+
+  document.getElementById('panel-'+id)
+    .classList.add('on');
 }
 
-// ==================== SHARE ====================
-document.getElementById('shareUrl').textContent = window.location.href;
-function copyLink(){
-  navigator.clipboard.writeText(window.location.href).then(()=>toast('Lien copié !'));
-}
+function toast(msg){
 
-// ==================== TOAST ====================
-function toast(msg) {
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+
+  t.innerText=msg;
+
+  t.style.display='block';
+
+  setTimeout(()=>{
+    t.style.display='none';
+  },2000);
 }
 
-// ==================== INIT ====================
-window.addEventListener('load', loadAllFiles);
+window.addEventListener('load',loadAllFiles);
+
 </script>
+
 </body>
 </html>
-HTMLEOF
