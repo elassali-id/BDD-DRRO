@@ -179,7 +179,14 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--tx)}
 .cmp-stat:last-child{border-bottom:none}
 .cmp-stat-label{font-size:12px;color:var(--tx2)}
 .cmp-stat-val{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx)}
-
+  
+/* ANOMALY LIST */
+.ano-list{display:flex;flex-direction:column;gap:6px}
+.ano-item{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px}
+.ano-id{font-family:var(--mono);font-size:11px;color:var(--acc);min-width:90px}
+.ano-lib{font-size:12px;color:var(--tx2);flex:1}
+.ano-badge{flex-shrink:0}
+  
 /* EMPTY */
 .empty{text-align:center;padding:48px 24px;color:var(--tx3)}
 .empty-icon{font-size:40px;margin-bottom:12px;opacity:.4}
@@ -304,6 +311,10 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--tx)}
     <div class="card">
       <div class="card-title">Articles par gare — TOP 15</div>
       <div class="chart-wrap" style="height:320px"><canvas id="cGare"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Articles par voie (Localisation)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="cLoc"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">Observations par gare (stacked)</div>
