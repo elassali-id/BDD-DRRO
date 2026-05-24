@@ -10,7 +10,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#8181ab;--s1:#12121a;--s2:#1a1a26;--s3:#22223a;
+  --bg:#eeeef4;--s1:#12121a;--s2:#1a1a26;--s3:#22223a;
   --bd:#2a2a45;--bd2:#3a3a60;
   --acc:#5b8df6;--acc2:#a78bfa;--acc3:#34d399;
   --amber:#fbbf24;--red:#f87171;--blue:#60a5fa;
@@ -425,7 +425,17 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--tx)}
       <button class="btn btn-out" onclick="exportByZone('AEBB')">↓ AEBB seul</button>
     </div>
   </div>
-
+  
+  <div class="sec-title">Partager ce tableau de bord</div>
+  <div class="card">
+    <div class="card-title">Lien de partage</div>
+    <p style="font-size:12px;color:var(--tx3);margin-bottom:4px">Partagez ce fichier HTML — il se suffit à lui-même. Pour un lien permanent, hébergez-le sur GitHub Pages ou Netlify.</p>
+    <div class="share-row">
+      <span class="share-url" id="shareUrl">—</span>
+      <button class="btn btn-acc btn-sm" onclick="copyLink()">📋 Copier</button>
+    </div>
+  </div>
+  
 </div>
 </main>
 
