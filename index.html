@@ -440,7 +440,7 @@ const ZONE_CONFIG = {
     pwd: 'cebs2026',
     id:  '1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq',
     color: '#1a4fa8', color2: 'rgba(26,79,168,0.65)',
-    dlHref: 'https://docs.google.com/spreadsheets/d/1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq/edit?gid=1040953530#gid=1040953530',
+    dlHref: 'https://docs.google.com/spreadsheets/d/1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq/export?format=xlsx',
     icon: '📘', badgeClass: 'src-cebs', zcolor:'#1a4fa8',
   },
   CEJ: {
@@ -739,7 +739,8 @@ function updateAll() {
 }
 
 // ════════════════════ KPIs ════════════════════
-const obsVal = r => (r.Observation||'').toString().toUpperCase().trim();
+const obsVal  = r => (r.Observation||'').toString().toUpperCase().trim();
+const gareVal = r => (r.Gare||'').toString().trim();   // normalize: number 332 === string "332"
 const isOk   = r => obsVal(r)==='CONFORME';
 const isAv   = r => obsVal(r)==='A VERIFIER';
 const isDisc = r => obsVal(r).startsWith('DISCORDANCE');
@@ -750,7 +751,7 @@ const fmt    = n => (+n).toLocaleString('fr');
 function buildKPIs() {
   const d=zoneData, n=d.length;
   const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
-  const gares=[...new Set(d.map(r=>r.Gare).filter(Boolean))];
+  const gares=[...new Set(d.map(gareVal).filter(Boolean))];
   const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
   set('kTotal', fmt(n));
   set('kOk',   fmt(ok));   set('kOkP',   pct(ok,n)+' du total');
@@ -767,7 +768,7 @@ function buildAdminZoneCards() {
     const cfg=ZONE_CONFIG[zone];
     const d=zoneData.filter(r=>r.Source===zone), n=d.length;
     const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
-    const gares=[...new Set(d.map(r=>r.Gare).filter(Boolean))];
+    const gares=[...new Set(d.map(gareVal).filter(Boolean))];
     const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
     return `<div class="kpi-zone-card" style="--zcolor:${cfg.zcolor}">
       <div class="kpi-zone-title"><span class="${cfg.badgeClass}">${zone}</span></div>
@@ -821,7 +822,7 @@ function buildCharts() {
   // 3. Par gare TOP 15 (vertical)
   destroy('cGare');
   const gareMap={};
-  d.forEach(r=>{ const k=(r.Gare||'N/A').toString(); gareMap[k]=(gareMap[k]||0)+1; });
+  d.forEach(r=>{ const k=gareVal(r)||'N/A'; gareMap[k]=(gareMap[k]||0)+1; });
   const gareSort=Object.entries(gareMap).sort((a,b)=>b[1]-a[1]);
   const top15=gareSort.slice(0,15);
   charts['cGare']=new Chart(document.getElementById('cGare'),{
@@ -837,10 +838,10 @@ function buildCharts() {
   charts['cGareObs']=new Chart(document.getElementById('cGareObs'),{
     type:'bar',
     data:{labels:top10g.map(g=>'G'+g),datasets:[
-      {label:'Conforme',   data:top10g.map(g=>d.filter(r=>r.Gare==g&&isOk(r)).length),  backgroundColor:'rgba(29,158,117,.75)'},
-      {label:'A vérifier', data:top10g.map(g=>d.filter(r=>r.Gare==g&&isAv(r)).length),  backgroundColor:'rgba(186,117,23,.75)'},
-      {label:'Discordance',data:top10g.map(g=>d.filter(r=>r.Gare==g&&isDisc(r)).length),backgroundColor:'rgba(163,45,45,.75)'},
-      {label:'Non rens.',  data:top10g.map(g=>d.filter(r=>r.Gare==g&&isNd(r)).length),  backgroundColor:'rgba(149,133,212,.45)'},
+      {label:'Conforme',   data:top10g.map(g=>d.filter(r=>gareVal(r)===g&&isOk(r)).length),  backgroundColor:'rgba(29,158,117,.75)'},
+      {label:'A vérifier', data:top10g.map(g=>d.filter(r=>gareVal(r)===g&&isAv(r)).length),  backgroundColor:'rgba(186,117,23,.75)'},
+      {label:'Discordance',data:top10g.map(g=>d.filter(r=>gareVal(r)===g&&isDisc(r)).length),backgroundColor:'rgba(163,45,45,.75)'},
+      {label:'Non rens.',  data:top10g.map(g=>d.filter(r=>gareVal(r)===g&&isNd(r)).length),  backgroundColor:'rgba(149,133,212,.45)'},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
       scales:{x:{stacked:true,grid:{display:false},ticks:{maxRotation:45}},y:{stacked:true,grid:{color:'#e0d9f7'}}}}
@@ -924,7 +925,7 @@ function buildExportBtns() {
 
 // ════════════════════ FILTERS ════════════════════
 function populateFilters() {
-  const gares=[...new Set(zoneData.map(r=>(r.Gare||'').toString()).filter(Boolean))].sort((a,b)=>+a-+b);
+  const gares=[...new Set(zoneData.map(gareVal).filter(Boolean))].sort((a,b)=>+a-+b);
   const invs=[...new Set(zoneData.map(r=>(r.Inventoriste||'').toString()).filter(Boolean))].sort();
   document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option>${g}</option>`).join('');
   document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option>${i}</option>`).join('');
@@ -939,7 +940,7 @@ function applyFilters() {
   filteredData = zoneData.filter(r=>{
     const ov=obsVal(r);
     if(src  && r.Source!==src) return false;
-    if(gare && (r.Gare||'').toString()!==gare) return false;
+    if(gare && gareVal(r)!==gare) return false;
     if(inv  && (r.Inventoriste||'').toString()!==inv) return false;
     if(obs==='vide'        && ov) return false;
     if(obs==='DISCORDANCE' && !ov.startsWith('DISCORDANCE')) return false;
