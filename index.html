@@ -36,22 +36,17 @@ body{background:var(--bg);color:var(--tx);font-family:var(--sans);min-height:100
 .login-logo span{color:var(--acc)}
 .login-title{font-size:18px;font-weight:700;color:var(--tx);margin-bottom:6px;text-align:center}
 .login-sub{font-size:12px;color:var(--tx3);margin-bottom:24px;text-align:center}
-
-/* zone grid + admin button */
 .login-zone-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 .zone-btn{border:1.5px solid var(--bd);border-radius:var(--r2);padding:16px 8px;text-align:center;cursor:pointer;background:var(--s2);transition:.15s}
 .zone-btn:hover{border-color:var(--acc);background:var(--s3)}
 .zone-btn.sel{border-color:var(--acc);background:#ede8ff;box-shadow:0 0 0 3px rgba(108,71,232,.15)}
 .zone-btn-icon{font-size:22px;margin-bottom:6px}
 .zone-btn-label{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--tx)}
-
-/* admin zone button — gold style */
 .admin-btn-row{margin-bottom:20px}
 .zone-btn.admin-zone{border-color:#d4a017;background:#fffbea}
 .zone-btn.admin-zone:hover{border-color:var(--gold);background:#fff5cc;box-shadow:0 0 0 3px rgba(200,149,26,.15)}
 .zone-btn.admin-zone.sel{border-color:var(--gold);background:#fff5cc;box-shadow:0 0 0 3px rgba(200,149,26,.25)}
 .zone-btn.admin-zone .zone-btn-label{color:#8a6000}
-
 .login-field{margin-bottom:14px}
 .login-field label{display:block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
 .login-field input{width:100%;background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--r);padding:10px 14px;font-family:var(--sans);font-size:13px;color:var(--tx);outline:none}
@@ -74,6 +69,9 @@ header{background:var(--s1);border-bottom:1.5px solid var(--bd);height:54px;disp
 .zone-badge-hdr.admin-badge{background:#fff5cc;color:#8a6000;border:1px solid #d4a017}
 .btn-logout{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;background:transparent;border:1.5px solid var(--bd);color:var(--tx3);cursor:pointer;transition:.15s}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
+.refresh-btn{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;background:transparent;border:1.5px solid var(--bd);color:var(--tx3);cursor:pointer;transition:.15s}
+.refresh-btn:hover{border-color:var(--acc);color:var(--acc)}
+.spinning{animation:spin .6s linear infinite}
 
 /* ── TABS ── */
 nav{background:var(--s1);border-bottom:1.5px solid var(--bd);display:flex;padding:5px 24px;gap:2px}
@@ -95,8 +93,8 @@ main{padding:24px;max-width:1440px;margin:0 auto}
 .alert code{font-family:var(--mono);font-size:11px;background:#fff4d6;padding:2px 6px;border-radius:4px}
 .alert.ok{background:#e8f7f2;border-color:#70d4b0;color:#0a4030}.alert.ok strong{color:var(--acc3)}
 .alert.update{background:#e8f0ff;border:1.5px solid #b3cdf7;color:#1a3a7a}.alert.update strong{color:#1a4fa8}
-.alert.update .btn-refresh{font-family:var(--mono);font-size:11px;font-weight:600;background:#1a4fa8;color:#fff;border:none;border-radius:6px;padding:5px 14px;cursor:pointer;margin-top:6px;display:inline-block}
-.alert.update .btn-refresh:hover{background:#143d8a}
+.alert.update .btn-refresh-inline{font-family:var(--mono);font-size:11px;font-weight:600;background:#1a4fa8;color:#fff;border:none;border-radius:6px;padding:5px 14px;cursor:pointer;margin-top:6px;display:inline-block}
+.alert.update .btn-refresh-inline:hover{background:#143d8a}
 
 /* ── KPI ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
@@ -104,8 +102,6 @@ main{padding:24px;max-width:1440px;margin:0 auto}
 .kpi-label{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
 .kpi-val{font-family:var(--mono);font-size:24px;font-weight:600;color:var(--kpi-color,var(--acc));line-height:1}
 .kpi-sub{font-size:11px;color:var(--tx3);margin-top:5px}
-
-/* admin zone KPI cards */
 .kpi-zone-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
 @media(max-width:900px){.kpi-zone-grid{grid-template-columns:1fr}}
 .kpi-zone-card{background:var(--s1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:20px;border-top:4px solid var(--zcolor,var(--acc))}
@@ -118,8 +114,7 @@ main{padding:24px;max-width:1440px;margin:0 auto}
 
 /* ── CHARTS ── */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.charts-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
-@media(max-width:1000px){.charts-grid,.charts-grid-3{grid-template-columns:1fr}}
+@media(max-width:1000px){.charts-grid{grid-template-columns:1fr}}
 .wide{grid-column:1/-1}
 .card{background:var(--s1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:20px}
 .card-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:16px}
@@ -177,11 +172,6 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--acc3);color:#04342c;padding:10px 18px;border-radius:var(--r);font-family:var(--mono);font-size:12px;font-weight:600;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:9998}
 .toast.show{opacity:1;transform:translateY(0)}
-.refresh-btn{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;background:transparent;border:1.5px solid var(--bd);color:var(--tx3);cursor:pointer;transition:.15s}
-.refresh-btn:hover{border-color:var(--acc);color:var(--acc)}
-.spinning{animation:spin .6s linear infinite}
-
-/* admin gold accent bar */
 .admin-header-bar{background:linear-gradient(90deg,#fffbea,#fff5cc);border-bottom:2px solid #d4a017;padding:6px 24px;font-family:var(--mono);font-size:10px;color:#8a6000;letter-spacing:.1em;display:none}
 .admin-header-bar.show{display:block}
 </style>
@@ -202,8 +192,6 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
     <div class="login-logo"><span>DRRO</span> / INVENTAIRE 2026</div>
     <div class="login-title">Accès sécurisé</div>
     <div class="login-sub">Sélectionnez votre zone et saisissez votre code d'accès</div>
-
-    <!-- Zone buttons -->
     <div class="login-zone-grid">
       <div class="zone-btn" id="zBtn-CEBS" onclick="selectZone('CEBS')">
         <div class="zone-btn-icon">📘</div>
@@ -218,8 +206,6 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
         <div class="zone-btn-label">AEBB</div>
       </div>
     </div>
-
-    <!-- Admin button -->
     <div class="admin-btn-row">
       <div class="zone-btn admin-zone" id="zBtn-ADMIN" onclick="selectZone('ADMIN')" style="display:flex;align-items:center;gap:10px;padding:12px 16px;text-align:left">
         <div class="zone-btn-icon" style="font-size:18px;margin:0">👑</div>
@@ -229,47 +215,41 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
         </div>
       </div>
     </div>
-
-    <div id="loginErr" class="login-err">Zone non sélectionnée ou code incorrect.</div>
+    <div id="loginErr" class="login-err"></div>
     <div class="login-field">
       <label>Code d'accès</label>
       <input type="password" id="loginPwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <button class="login-btn" onclick="doLogin()">Accéder →</button>
-    <div class="login-footer">22/05/2026 ELASSALI IDRISS.</div>
+    <div class="login-footer">22/05/2026 — ELASSALI IDRISS</div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="appShell" style="display:none">
-<!-- Admin bar -->
-<div class="admin-header-bar" id="adminBar">
-</div>
+<div class="admin-header-bar" id="adminBar"></div>
 <header>
   <div class="logo"><span class="acc">DRRO</span><span class="sep"> / </span>INVENTAIRE 2026 / ELASSALI IDRISS</div>
   <div class="hdr-right">
     <span id="hdrZoneBadge" class="zone-badge-hdr"></span>
     <div class="status-dot" id="statusDot" style="background:var(--tx3);box-shadow:none"></div>
     <span class="status-txt" id="statusTxt">Chargement...</span>
-    <button class="refresh-btn" id="refreshBtn" onclick="reloadData()" title="Recharger les données">↺ Actualiser</button>
+    <button class="refresh-btn" id="refreshBtn" onclick="reloadData()">↺ Actualiser</button>
     <button class="btn-logout" onclick="doLogout()">⎋ Changer de zone</button>
   </div>
 </header>
 
-<nav id="mainNav">
-  <!-- tabs injected by JS depending on mode -->
-</nav>
+<nav id="mainNav"></nav>
 
 <main>
 
-<!-- ════════ ZONE: Vue d'ensemble + Analyse fusionnées ════════ -->
+<!-- ══ OVERVIEW ══ -->
 <div class="panel on" id="panel-overview">
   <div id="alertZone"></div>
   <div id="updateAlertZone"></div>
 
-  <!-- KPIs -->
   <div class="sec-title">Indicateurs — <span id="ovZoneLabel">—</span></div>
-  <div class="kpi-grid" id="kpiGrid">
+  <div class="kpi-grid">
     <div class="kpi" style="--kpi-color:var(--acc)">
       <div class="kpi-label">Total articles</div>
       <div class="kpi-val" id="kTotal">—</div>
@@ -307,13 +287,13 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
     </div>
   </div>
 
-  <!-- ADMIN ONLY: 3 zone cards -->
+  <!-- ADMIN: cartes par zone -->
   <div id="adminZoneCards" style="display:none">
     <div class="sec-title">Récapitulatif par zone</div>
     <div class="kpi-zone-grid" id="zoneCardsGrid"></div>
   </div>
 
-  <!-- Charts section (zone users see everything here) -->
+  <!-- Graphiques (zones + admin) -->
   <div id="chartsSection">
     <div class="sec-title">Observations</div>
     <div class="charts-grid">
@@ -326,7 +306,6 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
         <div class="chart-wrap" style="height:260px"><canvas id="cInv"></canvas></div>
       </div>
     </div>
-
     <div class="sec-title">Répartition par gare</div>
     <div class="charts-grid">
       <div class="card">
@@ -338,7 +317,6 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
         <div class="chart-wrap" style="height:300px"><canvas id="cGareObs"></canvas></div>
       </div>
     </div>
-
     <div class="sec-title">Libellés d'articles</div>
     <div class="charts-grid">
       <div class="card wide">
@@ -346,8 +324,7 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
         <div class="chart-wrap" style="height:260px"><canvas id="cLib"></canvas></div>
       </div>
     </div>
-
-    <!-- ADMIN ONLY: comparison bar chart across zones -->
+    <!-- ADMIN ONLY -->
     <div id="adminChartSection" style="display:none">
       <div class="sec-title">Comparaison inter-zones</div>
       <div class="charts-grid">
@@ -364,14 +341,14 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
   </div>
 </div>
 
-<!-- ════════ TABLEAU ════════ -->
+<!-- ══ TABLEAU ══ -->
 <div class="panel" id="panel-tableau">
   <div class="tbl-wrap">
     <div class="tbl-hdr">
       <span class="tbl-count" id="tblCount">—</span>
       <div class="tbl-controls">
         <input type="text" id="srch" placeholder="🔍 ID, libellé, code..." oninput="applyFilters()">
-        <!-- Admin sees zone filter, zone users don't -->
+        <!-- Zone filter: admin only -->
         <select id="fSrc" onchange="applyFilters()" style="display:none">
           <option value="">Toutes zones</option>
           <option value="CEBS">CEBS</option>
@@ -392,17 +369,7 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
     </div>
     <div style="overflow-x:auto">
       <table>
-        <thead><tr id="tblHead">
-          <th id="thZone" onclick="sortTbl('Source')" style="display:none">ZONE</th>
-          <th onclick="sortTbl('ID_Immobilisation')">ID IMO</th>
-          <th onclick="sortTbl('Lib_Article')">LIBELLÉ</th>
-          <th onclick="sortTbl('Cod_Article')">CODE</th>
-          <th onclick="sortTbl('Observation')">OBSERVATION</th>
-          <th onclick="sortTbl('Localisation')">LOCAL.</th>
-          <th onclick="sortTbl('Gare')">GARE</th>
-          <th onclick="sortTbl('Inventoriste')">INVENTORISTE</th>
-          <th onclick="sortTbl('Date d\'inventaire')">DATE</th>
-        </tr></thead>
+        <thead><tr id="tblHead"></tr></thead>
         <tbody id="tBody"></tbody>
       </table>
     </div>
@@ -413,7 +380,7 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
   </div>
 </div>
 
-<!-- ════════ TELECHARGEMENT ════════ -->
+<!-- ══ TELECHARGEMENT ══ -->
 <div class="panel" id="panel-telechargement">
   <div class="sec-title">Fichiers source</div>
   <div class="dl-grid" id="dlGrid"></div>
@@ -426,12 +393,12 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
 </div>
 
 </main>
-</div><!-- /appShell -->
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════ CONFIG ════════════════════
+// ══════════════ CONFIG ══════════════
 const ZONE_CONFIG = {
   CEBS: {
     pwd: 'cebs2026',
@@ -454,17 +421,15 @@ const ZONE_CONFIG = {
     dlHref: 'https://docs.google.com/spreadsheets/d/1ORIJXPdWMeADALzeElDvxUl_Fqy3Nfwv/export?format=xlsx',
     icon: '📙', badgeClass: 'src-aebb', zcolor:'#1d9e75',
   },
-  ADMIN: {
-    pwd: 'drro@admin2026',  // ← CHANGEZ CE MOT DE PASSE
-  }
+  ADMIN: { pwd: 'drro@admin2026' }
 };
 const EXPORT_URL = id => `https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`;
 
-// ════════════════════ STATE ════════════════════
-let currentZone = null;   // 'CEBS'|'CEJ'|'AEBB'|'ADMIN'
+// ══════════════ STATE ══════════════
+let currentZone = null;
 let isAdmin = false;
 let selectedLoginZone = null;
-let zoneData = [];        // all loaded data (1 zone or 3 zones)
+let zoneData = [];
 let filteredData = [];
 let page = 1;
 const PG = 50;
@@ -473,7 +438,23 @@ let charts = {};
 let lastCounts = {};
 let updateCheckInterval = null;
 
-// ════════════════════ LOGIN ════════════════════
+// ══════════════ NORMALISATION ══════════════
+// Toutes les valeurs passent par ces fonctions avant comparaison
+// → élimine les espaces, les retours à la ligne, différences de type
+const normStr = v => (v == null ? '' : String(v).trim());
+const obsVal  = r => normStr(r.Observation).toUpperCase();
+const gareVal = r => normStr(r.Gare);
+// ★ FIX PRINCIPAL : normalisation stricte de l'inventoriste
+const invVal  = r => normStr(r.Inventoriste);
+
+const isOk   = r => obsVal(r) === 'CONFORME';
+const isAv   = r => obsVal(r) === 'A VERIFIER';
+const isDisc = r => obsVal(r).startsWith('DISCORDANCE');
+const isNd   = r => !obsVal(r);
+const pct    = (a,b) => b ? Math.round(a/b*100)+'%' : '—';
+const fmt    = n => (+n).toLocaleString('fr');
+
+// ══════════════ LOGIN ══════════════
 function selectZone(z) {
   selectedLoginZone = z;
   document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('sel'));
@@ -497,14 +478,11 @@ function doLogin() {
   err.style.display = 'none';
   currentZone = selectedLoginZone;
   isAdmin = (currentZone === 'ADMIN');
-
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appShell').style.display = 'block';
-
-  // Admin bar
   document.getElementById('adminBar').classList.toggle('show', isAdmin);
 
-  // Header badge
+  // Badge header
   const badge = document.getElementById('hdrZoneBadge');
   if (isAdmin) {
     badge.textContent = '👑 ADMIN';
@@ -513,23 +491,18 @@ function doLogin() {
     badge.textContent = currentZone;
     badge.className = 'zone-badge-hdr ' + cfg.badgeClass;
   }
-
-  // Zone label
   set('ovZoneLabel', isAdmin ? 'Toutes zones' : currentZone);
 
-  // Show/hide admin-specific UI
-  document.getElementById('adminZoneCards').style.display = isAdmin ? 'block' : 'none';
+  // Admin-specific UI
+  document.getElementById('adminZoneCards').style.display   = isAdmin ? 'block' : 'none';
   document.getElementById('adminChartSection').style.display = isAdmin ? 'block' : 'none';
-  document.getElementById('fSrc').style.display = isAdmin ? '' : 'none';
-  document.getElementById('thZone').style.display = isAdmin ? '' : 'none';
+  document.getElementById('fSrc').style.display             = isAdmin ? ''      : 'none';
 
-  // Build nav tabs
+  // Build table header (zone column only for admin)
+  buildTableHead();
   buildNav();
-  // Build download section
   buildDlSection();
-  // Build export buttons
   buildExportBtns();
-  // Load data
   reloadData();
 }
 
@@ -548,45 +521,41 @@ function doLogout() {
   showTab('overview');
 }
 
-// ════════════════════ NAV TABS ════════════════════
-function buildNav() {
-  // Zone users: 2 tabs (Vue d'ensemble + Données) — analyse is integrated in overview
-  // Admin: 3 tabs (Vue d'ensemble, Données, Téléchargement)
-  const nav = document.getElementById('mainNav');
-  if (isAdmin) {
-    nav.innerHTML = `
-      <button class="tab on"  onclick="showTab('overview')">Vue d'ensemble</button>
-      <button class="tab"     onclick="showTab('tableau')">Données</button>
-      <button class="tab"     onclick="showTab('telechargement')">Téléchargement</button>`;
-  } else {
-    nav.innerHTML = `
-      <button class="tab on"  onclick="showTab('overview')">Vue d'ensemble</button>
-      <button class="tab"     onclick="showTab('tableau')">Données</button>
-      <button class="tab"     onclick="showTab('telechargement')">Téléchargement</button>`;
-  }
+// ══════════════ TABLE HEAD ══════════════
+function buildTableHead() {
+  document.getElementById('tblHead').innerHTML = `
+    ${isAdmin ? '<th onclick="sortTbl(\'Source\')">ZONE</th>' : ''}
+    <th onclick="sortTbl('ID_Immobilisation')">ID IMO</th>
+    <th onclick="sortTbl('Lib_Article')">LIBELLÉ</th>
+    <th onclick="sortTbl('Cod_Article')">CODE</th>
+    <th onclick="sortTbl('Observation')">OBSERVATION</th>
+    <th onclick="sortTbl('Localisation')">LOCAL.</th>
+    <th onclick="sortTbl('Gare')">GARE</th>
+    <th onclick="sortTbl('Inventoriste')">INVENTORISTE</th>
+    <th onclick="sortTbl(\"Date d'inventaire\")">DATE</th>`;
 }
 
-// ════════════════════ LOAD DATA ════════════════════
+// ══════════════ NAV ══════════════
+function buildNav() {
+  document.getElementById('mainNav').innerHTML = `
+    <button class="tab on" onclick="showTab('overview')">Vue d'ensemble</button>
+    <button class="tab"    onclick="showTab('tableau')">Données</button>
+    <button class="tab"    onclick="showTab('telechargement')">Téléchargement</button>`;
+}
+
+// ══════════════ LOAD DATA ══════════════
 async function reloadData() {
-  if (!currentZone) return;
   document.getElementById('refreshBtn').classList.add('spinning');
   clearUpdateAlert();
   zoneData = [];
   setStatus('Chargement...', false);
-
-  if (isAdmin) {
-    await loadAdminData();
-  } else {
-    await loadSingleZone(currentZone);
-  }
+  if (isAdmin) { await loadAdminData(); } else { await loadSingleZone(currentZone); }
 }
 
 async function loadSingleZone(zone) {
-  const cfg = ZONE_CONFIG[zone];
   setProgress(20, `Chargement ${zone}...`);
   try {
-    const buf = await fetchBuf(EXPORT_URL(cfg.id));
-    const rows = parseXLSX(buf);
+    const rows = parseXLSX(await fetchBuf(EXPORT_URL(ZONE_CONFIG[zone].id)));
     zoneData = rows.map(r => ({...r, Source: zone}));
     lastCounts[zone] = rows.length;
     setProgress(100, 'OK');
@@ -595,7 +564,7 @@ async function loadSingleZone(zone) {
       document.getElementById('loadScreen').style.display = 'none';
       showAlert('ok', rows.length, zone);
       updateAll();
-      setStatus(`${zone} — ${rows.length} articles`, true);
+      setStatus(`${zone} — ${fmt(rows.length)} articles`, true);
       startUpdateWatcher();
     }, 300);
   } catch(e) {
@@ -610,19 +579,13 @@ async function loadSingleZone(zone) {
 async function loadAdminData() {
   const zones = ['CEBS','CEJ','AEBB'];
   let loaded = 0, failed = [];
-  setProgress(5, 'Chargement CEBS...');
   for (const zone of zones) {
-    const cfg = ZONE_CONFIG[zone];
     setProgress(5 + loaded * 30, `Chargement ${zone}...`);
     try {
-      const buf = await fetchBuf(EXPORT_URL(cfg.id));
-      const rows = parseXLSX(buf);
+      const rows = parseXLSX(await fetchBuf(EXPORT_URL(ZONE_CONFIG[zone].id)));
       zoneData = zoneData.concat(rows.map(r => ({...r, Source: zone})));
       lastCounts[zone] = rows.length;
-    } catch(e) {
-      failed.push(zone);
-      lastCounts[zone] = null;
-    }
+    } catch(e) { failed.push(zone); lastCounts[zone] = null; }
     loaded++;
   }
   setProgress(100, 'OK');
@@ -631,15 +594,15 @@ async function loadAdminData() {
     document.getElementById('loadScreen').style.display = 'none';
     const z = document.getElementById('alertZone');
     if (failed.length === 0) {
-      z.innerHTML = `<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Toutes les zones chargées</strong> — ${zoneData.length} articles au total. ${new Date().toLocaleString('fr')}</p></div>`;
+      z.innerHTML = `<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Toutes les zones chargées</strong> — ${fmt(zoneData.length)} articles. ${new Date().toLocaleString('fr')}</p></div>`;
     } else if (failed.length < 3) {
-      z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Zones non accessibles : <strong>${failed.join(', ')}</strong>. Rendez les fichiers publics dans Google Sheets.</p></div>`;
+      z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Non accessibles : <strong>${failed.join(', ')}</strong>. Configurez le partage Google Sheets.</p></div>`;
     } else {
-      z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Aucun fichier accessible.</strong> Configurez le partage Google Sheets ou chargez manuellement.</p></div>`;
+      z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Aucun fichier accessible.</strong> Configurez le partage ou chargez manuellement.</p></div>`;
     }
     if (zoneData.length > 0) {
       updateAll();
-      setStatus(`Admin — ${zoneData.length} articles (3 zones)`, true);
+      setStatus(`Admin — ${fmt(zoneData.length)} articles`, true);
       startUpdateWatcher();
     }
   }, 300);
@@ -657,7 +620,7 @@ function parseXLSX(buf) {
   return XLSX.utils.sheet_to_json(ws, {defval:''});
 }
 
-// ════════════════════ UPDATE WATCHER ════════════════════
+// ══════════════ UPDATE WATCHER ══════════════
 function startUpdateWatcher() {
   if (updateCheckInterval) clearInterval(updateCheckInterval);
   updateCheckInterval = setInterval(async () => {
@@ -666,107 +629,90 @@ function startUpdateWatcher() {
     for (const zone of zones) {
       if (lastCounts[zone] == null) continue;
       try {
-        const buf = await fetchBuf(EXPORT_URL(ZONE_CONFIG[zone].id));
-        const rows = parseXLSX(buf);
+        const rows = parseXLSX(await fetchBuf(EXPORT_URL(ZONE_CONFIG[zone].id)));
         if (rows.length !== lastCounts[zone]) changed.push(`${zone} (${lastCounts[zone]} → ${rows.length})`);
       } catch(e) {}
     }
     if (changed.length) {
-      const z = document.getElementById('updateAlertZone');
-      z.innerHTML = `<div class="alert update"><div class="alert-icon">🔄</div>
-        <div><p><strong>Mise à jour détectée !</strong><br>Changements : <strong>${changed.join(', ')}</strong> articles.<br>Rechargez pour voir les nouvelles données.</p>
-        <button class="btn-refresh" onclick="reloadData()">↺ Actualiser</button></div></div>`;
+      document.getElementById('updateAlertZone').innerHTML = `<div class="alert update"><div class="alert-icon">🔄</div>
+        <div><p><strong>Mise à jour détectée !</strong><br>Changements : <strong>${changed.join(', ')}</strong>.<br>Rechargez pour voir les nouvelles données.</p>
+        <button class="btn-refresh-inline" onclick="reloadData()">↺ Actualiser</button></div></div>`;
     }
   }, 120000);
 }
 
 function clearUpdateAlert() { const z=document.getElementById('updateAlertZone'); if(z)z.innerHTML=''; }
-
-function setProgress(pct, msg) {
-  document.getElementById('loadFill').style.width = pct+'%';
-  document.getElementById('loadStatus').textContent = msg;
+function setProgress(pct,msg){ document.getElementById('loadFill').style.width=pct+'%'; document.getElementById('loadStatus').textContent=msg; }
+function setStatus(txt,ok){
+  document.getElementById('statusTxt').textContent=txt;
+  const dot=document.getElementById('statusDot');
+  dot.style.background=ok?'var(--acc3)':'var(--amber)';
+  dot.style.boxShadow=ok?'0 0 6px var(--acc3)':'0 0 6px var(--amber)';
 }
-function setStatus(txt, ok) {
-  document.getElementById('statusTxt').textContent = txt;
-  const dot = document.getElementById('statusDot');
-  dot.style.background = ok ? 'var(--acc3)' : 'var(--amber)';
-  dot.style.boxShadow  = ok ? '0 0 6px var(--acc3)' : '0 0 6px var(--amber)';
+function showAlert(type,count,zone){
+  const z=document.getElementById('alertZone');
+  if(type==='ok') z.innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Zone ${zone} chargée</strong> — ${fmt(count)} articles. ${new Date().toLocaleString('fr')}</p></div>`;
+  else z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Fichier non accessible (${zone})</strong> — Ouvrez le fichier dans Google Sheets → <code>Partager → Tout le monde avec le lien → Lecteur</code>.</p></div>`;
 }
-function showAlert(type, count, zone) {
-  const z = document.getElementById('alertZone');
-  if (type==='ok') {
-    z.innerHTML = `<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Zone ${zone} chargée</strong> — ${fmt(count)} articles. ${new Date().toLocaleString('fr')}</p></div>`;
-  } else {
-    z.innerHTML = `<div class="alert"><div class="alert-icon">⚠</div><p><strong>Fichier non accessible (${zone})</strong> — Ouvrez le fichier dans Google Sheets → <code>Partager → Tout le monde avec le lien → Lecteur</code>.</p></div>`;
-  }
-}
-function showManualUpload(zone) {
-  const z = document.getElementById('alertZone');
-  z.innerHTML += `<div style="background:var(--s1);border:1.5px dashed var(--bd2);border-radius:var(--r2);padding:24px;text-align:center;margin-top:12px;cursor:pointer" onclick="document.getElementById('manualInput').click()">
+function showManualUpload(zone){
+  const z=document.getElementById('alertZone');
+  z.innerHTML+=`<div style="background:var(--s1);border:1.5px dashed var(--bd2);border-radius:var(--r2);padding:24px;text-align:center;margin-top:12px;cursor:pointer" onclick="document.getElementById('manualInput').click()">
     <div style="font-size:28px;margin-bottom:6px;opacity:.5">📂</div>
     <div style="font-size:13px;color:var(--tx2);margin-bottom:4px">Chargement manuel — ${zone}</div>
     <div style="font-size:11px;color:var(--tx3)">Cliquez pour charger INVENTAIRE-${zone}.xlsx</div>
     <input type="file" id="manualInput" accept=".xlsx" style="display:none" onchange="handleManual(this.files[0])">
   </div>`;
 }
-function handleManual(file) {
-  if (!file) return;
+function handleManual(file){
+  if(!file) return;
   const zone = isAdmin
-    ? (['CEBS','CEJ','AEBB'].find(z => file.name.toUpperCase().includes(z)) || 'CEBS')
+    ? (['CEBS','CEJ','AEBB'].find(z=>file.name.toUpperCase().includes(z))||'CEBS')
     : currentZone;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const rows = parseXLSX(e.target.result);
-    zoneData = zoneData.filter(r=>r.Source!==zone).concat(rows.map(r=>({...r,Source:zone})));
-    lastCounts[zone] = rows.length;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const rows=parseXLSX(e.target.result);
+    zoneData=zoneData.filter(r=>r.Source!==zone).concat(rows.map(r=>({...r,Source:zone})));
+    lastCounts[zone]=rows.length;
     updateAll();
-    setStatus((isAdmin?'Admin':'Zone '+zone)+' — '+zoneData.length+' articles', true);
-    toast(zone+' chargé — '+rows.length+' articles');
+    setStatus((isAdmin?'Admin':'Zone '+zone)+' — '+fmt(zoneData.length)+' articles',true);
+    toast(zone+' chargé — '+fmt(rows.length)+' articles');
   };
   reader.readAsArrayBuffer(file);
 }
 
-// ════════════════════ UPDATE ALL ════════════════════
-function updateAll() {
+// ══════════════ UPDATE ALL ══════════════
+function updateAll(){
   buildKPIs();
-  if (isAdmin) buildAdminZoneCards();
+  if(isAdmin) buildAdminZoneCards();
   buildCharts();
+  // ★ FIX : reconstruit toujours les listes de filtres avec les vraies valeurs normalisées
   populateFilters();
   applyFilters();
 }
 
-// ════════════════════ KPIs ════════════════════
-const obsVal  = r => (r.Observation||'').toString().toUpperCase().trim();
-const gareVal = r => (r.Gare||'').toString().trim();   // normalize: number 332 === string "332"
-const isOk   = r => obsVal(r)==='CONFORME';
-const isAv   = r => obsVal(r)==='A VERIFIER';
-const isDisc = r => obsVal(r).startsWith('DISCORDANCE');
-const isNd   = r => !obsVal(r);
-const pct    = (a,b) => b ? Math.round(a/b*100)+'%' : '—';
-const fmt    = n => (+n).toLocaleString('fr');
-
-function buildKPIs() {
+// ══════════════ KPIs ══════════════
+function buildKPIs(){
   const d=zoneData, n=d.length;
   const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
   const gares=[...new Set(d.map(gareVal).filter(Boolean))];
-  const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
-  set('kTotal', fmt(n));
-  set('kOk',   fmt(ok));   set('kOkP',   pct(ok,n)+' du total');
-  set('kAv',   fmt(av));   set('kAvP',   pct(av,n)+' du total');
-  set('kDisc', fmt(disc)); set('kDiscP', pct(disc,n)+' du total');
-  set('kNd',   fmt(nd));   set('kNdP',   pct(nd,n)+' du total');
-  set('kGares', gares.length);
-  set('kInvs',  invs.length);
+  const invs=[...new Set(d.map(invVal).filter(Boolean))];
+  set('kTotal',fmt(n));
+  set('kOk',fmt(ok));   set('kOkP',pct(ok,n)+' du total');
+  set('kAv',fmt(av));   set('kAvP',pct(av,n)+' du total');
+  set('kDisc',fmt(disc));set('kDiscP',pct(disc,n)+' du total');
+  set('kNd',fmt(nd));   set('kNdP',pct(nd,n)+' du total');
+  set('kGares',gares.length);
+  set('kInvs',invs.length);
 }
 
-function buildAdminZoneCards() {
+function buildAdminZoneCards(){
   const zones=['CEBS','CEJ','AEBB'];
-  document.getElementById('zoneCardsGrid').innerHTML = zones.map(zone=>{
+  document.getElementById('zoneCardsGrid').innerHTML=zones.map(zone=>{
     const cfg=ZONE_CONFIG[zone];
     const d=zoneData.filter(r=>r.Source===zone), n=d.length;
-    const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
+    const ok=d.filter(isOk).length,av=d.filter(isAv).length,disc=d.filter(isDisc).length,nd=d.filter(isNd).length;
     const gares=[...new Set(d.map(gareVal).filter(Boolean))];
-    const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
+    const invs=[...new Set(d.map(invVal).filter(Boolean))];
     return `<div class="kpi-zone-card" style="--zcolor:${cfg.zcolor}">
       <div class="kpi-zone-title"><span class="${cfg.badgeClass}">${zone}</span></div>
       <div class="kpi-zone-main">${fmt(n)}</div>
@@ -782,16 +728,16 @@ function buildAdminZoneCards() {
 
 function set(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
 
-// ════════════════════ CHARTS ════════════════════
+// ══════════════ CHARTS ══════════════
 Chart.defaults.color='#5b4da0';
 Chart.defaults.borderColor='#e0d9f7';
 Chart.defaults.font.family="'JetBrains Mono',monospace";
 Chart.defaults.font.size=11;
 function destroy(id){ if(charts[id]){try{charts[id].destroy();}catch(e){} delete charts[id];} }
 
-function buildCharts() {
-  const d = zoneData;
-  const mainColor = isAdmin ? 'rgba(108,71,232,0.65)' : ZONE_CONFIG[currentZone].color2;
+function buildCharts(){
+  const d=zoneData;
+  const mainColor=isAdmin?'rgba(108,71,232,0.65)':ZONE_CONFIG[currentZone].color2;
 
   // 1. Observations doughnut
   destroy('cObs');
@@ -801,13 +747,13 @@ function buildCharts() {
     data:{labels:['CONFORME','A VERIFIER','DISCORDANCE','N/R'],
       datasets:[{data:obsCounts,backgroundColor:['rgba(29,158,117,.85)','rgba(186,117,23,.85)','rgba(163,45,45,.85)','rgba(149,133,212,.5)'],borderWidth:2,borderColor:'#fff'}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14,font:{size:11}}}}}
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}}}}
   });
 
-  // 2. Par inventoriste (horizontal)
+  // 2. Par inventoriste — ★ utilise invVal() pour trier correctement
   destroy('cInv');
   const invMap={};
-  d.forEach(r=>{ const k=(r.Inventoriste||'Inconnu').toString(); invMap[k]=(invMap[k]||0)+1; });
+  d.forEach(r=>{ const k=invVal(r)||'Inconnu'; invMap[k]=(invMap[k]||0)+1; });
   const invSort=Object.entries(invMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
   charts['cInv']=new Chart(document.getElementById('cInv'),{
     type:'bar',
@@ -816,7 +762,7 @@ function buildCharts() {
       scales:{x:{beginAtZero:true,grid:{color:'#e0d9f7'}},y:{grid:{display:false}}}}
   });
 
-  // 3. Par gare TOP 15 (vertical)
+  // 3. Par gare TOP 15 — ★ utilise gareVal()
   destroy('cGare');
   const gareMap={};
   d.forEach(r=>{ const k=gareVal(r)||'N/A'; gareMap[k]=(gareMap[k]||0)+1; });
@@ -844,10 +790,10 @@ function buildCharts() {
       scales:{x:{stacked:true,grid:{display:false},ticks:{maxRotation:45}},y:{stacked:true,grid:{color:'#e0d9f7'}}}}
   });
 
-  // 5. Top 10 libellés doughnut
+  // 5. Top 10 libellés
   destroy('cLib');
   const libMap={};
-  d.forEach(r=>{ const k=(r.Lib_Article||'N/A').toString().split(' ').slice(0,3).join(' '); libMap[k]=(libMap[k]||0)+1; });
+  d.forEach(r=>{ const k=normStr(r.Lib_Article).split(' ').slice(0,3).join(' ')||'N/A'; libMap[k]=(libMap[k]||0)+1; });
   const libSort=Object.entries(libMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
   charts['cLib']=new Chart(document.getElementById('cLib'),{
     type:'doughnut',
@@ -856,11 +802,9 @@ function buildCharts() {
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10},color:'#5b4da0'}}}}
   });
 
-  // 6. ADMIN ONLY: zone comparison charts
-  if (isAdmin) {
+  // 6. ADMIN ONLY: zone comparison
+  if(isAdmin){
     const zones=['CEBS','CEJ','AEBB'];
-
-    // Observations by zone (grouped bar)
     destroy('cZoneObs');
     charts['cZoneObs']=new Chart(document.getElementById('cZoneObs'),{
       type:'bar',
@@ -873,8 +817,6 @@ function buildCharts() {
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
         scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'#e0d9f7'}}}}
     });
-
-    // Conformity rate by zone (horizontal)
     destroy('cZoneConf');
     charts['cZoneConf']=new Chart(document.getElementById('cZoneConf'),{
       type:'bar',
@@ -887,130 +829,165 @@ function buildCharts() {
   }
 }
 
-// ════════════════════ DOWNLOAD SECTION ════════════════════
-function buildDlSection() {
-  const zones = isAdmin ? ['CEBS','CEJ','AEBB'] : [currentZone];
-  document.getElementById('dlGrid').innerHTML = zones.map(zone=>{
-    const cfg=ZONE_CONFIG[zone];
-    const bg=zone==='CEBS'?'#e0ecff':zone==='CEJ'?'#ede8ff':'#e2f7ee';
-    return `<div class="dl-card">
-      <div class="dl-icon" style="background:${bg}">${cfg.icon}</div>
-      <div class="dl-info">
-        <div class="dl-name">INVENTAIRE-${zone}.xlsx</div>
-        <div class="dl-meta">Fichier source Google Sheets</div>
-      </div>
-      <a class="btn btn-grn" href="${cfg.dlHref}" target="_blank">↓ Télécharger</a>
-    </div>`;
-  }).join('');
+// ══════════════ FILTERS ══════════════
+// ★ FIX CENTRAL : populateFilters stocke les valeurs NORMALISÉES
+//   et applyFilters compare avec invVal() / gareVal() normalisés
+function populateFilters(){
+  // Gares: valeurs normalisées, triées numériquement si possible
+  const garesSet=[...new Set(zoneData.map(gareVal).filter(Boolean))];
+  garesSet.sort((a,b)=>{ const na=+a,nb=+b; return (!isNaN(na)&&!isNaN(nb))?(na-nb):a.localeCompare(b); });
+
+  // Inventoristes: valeurs normalisées, triées alphabétiquement
+  const invsSet=[...new Set(zoneData.map(invVal).filter(Boolean))];
+  invsSet.sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'}));
+
+  document.getElementById('fGare').innerHTML=
+    '<option value="">Toutes gares</option>'+garesSet.map(g=>`<option value="${g}">${g}</option>`).join('');
+  document.getElementById('fInv').innerHTML=
+    '<option value="">Tous inventoristes</option>'+invsSet.map(i=>`<option value="${i}">${i}</option>`).join('');
 }
 
-function buildExportBtns() {
-  const el=document.getElementById('exportBtns');
-  if (isAdmin) {
-    el.innerHTML = `
-      <button class="btn btn-acc"  onclick="exportFiltered()">↓ Exporter la sélection</button>
-      <button class="btn btn-out"  onclick="exportAll()">↓ Tout exporter (3 zones)</button>
-      <button class="btn btn-out"  onclick="exportByZone('CEBS')">↓ CEBS</button>
-      <button class="btn btn-out"  onclick="exportByZone('CEJ')">↓ CEJ</button>
-      <button class="btn btn-out"  onclick="exportByZone('AEBB')">↓ AEBB</button>`;
-  } else {
-    el.innerHTML = `
-      <button class="btn btn-acc" onclick="exportFiltered()">↓ Exporter la sélection</button>
-      <button class="btn btn-out" onclick="exportAll()">↓ Exporter tout</button>`;
-  }
-}
+function applyFilters(){
+  const src   = document.getElementById('fSrc').value;
+  const obs   = document.getElementById('fObs').value;
+  // ★ La valeur de l'option est déjà normalisée → compare directement avec normStr()
+  const gare  = normStr(document.getElementById('fGare').value);
+  const inv   = normStr(document.getElementById('fInv').value);
+  const srch  = normStr(document.getElementById('srch').value).toLowerCase();
 
-// ════════════════════ FILTERS ════════════════════
-function populateFilters() {
-  const gares=[...new Set(zoneData.map(gareVal).filter(Boolean))].sort((a,b)=>+a-+b);
-  const invs=[...new Set(zoneData.map(r=>(r.Inventoriste||'').toString()).filter(Boolean))].sort();
-  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option>${g}</option>`).join('');
-  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option>${i}</option>`).join('');
-}
-
-function applyFilters() {
-  const src  = document.getElementById('fSrc').value;
-  const obs  = document.getElementById('fObs').value;
-  const gare = document.getElementById('fGare').value;
-  const inv  = document.getElementById('fInv').value;
-  const srch = document.getElementById('srch').value.toLowerCase();
-  filteredData = zoneData.filter(r=>{
+  filteredData=zoneData.filter(r=>{
     const ov=obsVal(r);
-    if(src  && r.Source!==src) return false;
+    // Filtre zone (admin seulement)
+    if(src && r.Source!==src) return false;
+    // ★ Filtre gare : compare gareVal(r) normalisé avec la valeur normalisée du select
     if(gare && gareVal(r)!==gare) return false;
-    if(inv  && (r.Inventoriste||'').toString()!==inv) return false;
+    // ★ Filtre inventoriste : compare invVal(r) normalisé avec la valeur normalisée du select
+    if(inv && invVal(r)!==inv) return false;
+    // Filtre observation
     if(obs==='vide'        && ov) return false;
     if(obs==='DISCORDANCE' && !ov.startsWith('DISCORDANCE')) return false;
     if(obs&&obs!=='vide'&&obs!=='DISCORDANCE'&&ov!==obs) return false;
-    if(srch){ const h=[r.ID_Immobilisation,r.Lib_Article,r.Cod_Article,r.Inventoriste].join(' ').toLowerCase(); if(!h.includes(srch)) return false; }
+    // Recherche texte
+    if(srch){
+      const h=[normStr(r.ID_Immobilisation),normStr(r.Lib_Article),normStr(r.Cod_Article),invVal(r)].join(' ').toLowerCase();
+      if(!h.includes(srch)) return false;
+    }
     return true;
   });
   page=1; renderTable();
 }
 
-// ════════════════════ TABLE ════════════════════
-function sortTbl(col){ if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;} filteredData.sort((a,b)=>(a[col]||'').toString().localeCompare((b[col]||'').toString())*sortDir); renderTable(); }
-function obsBadge(v){ const u=(v||'').toString().toUpperCase().trim(); if(u==='CONFORME')return`<span class="obs-ok">CONFORME</span>`;if(u==='A VERIFIER')return`<span class="obs-av">A VÉRIFIER</span>`;if(u.startsWith('DISCORDANCE'))return`<span class="obs-disc">${v||'DISCORDANCE'}</span>`;return`<span class="obs-nd">—</span>`; }
-function srcBadge(s){ return `<span class="src-${(s||'').toLowerCase()}">${s||'—'}</span>`; }
-function fmtDate(v){ if(!v)return'—';if(v instanceof Date)return v.toLocaleDateString('fr');return v.toString().split('T')[0]; }
+// ══════════════ TABLE ══════════════
+function sortTbl(col){
+  if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
+  filteredData.sort((a,b)=>normStr(a[col]).localeCompare(normStr(b[col]))*sortDir);
+  renderTable();
+}
 
-function renderTable() {
+function obsBadge(v){
+  const u=normStr(v).toUpperCase();
+  if(u==='CONFORME')              return`<span class="obs-ok">CONFORME</span>`;
+  if(u==='A VERIFIER')            return`<span class="obs-av">A VÉRIFIER</span>`;
+  if(u.startsWith('DISCORDANCE')) return`<span class="obs-disc">${v||'DISCORDANCE'}</span>`;
+  return`<span class="obs-nd">—</span>`;
+}
+function srcBadge(s){ return`<span class="src-${normStr(s).toLowerCase()}">${s||'—'}</span>`; }
+function fmtDate(v){ if(!v)return'—'; if(v instanceof Date)return v.toLocaleDateString('fr'); return normStr(v).split('T')[0]; }
+
+function renderTable(){
   const n=filteredData.length, pages=Math.ceil(n/PG)||1;
   const slice=filteredData.slice((page-1)*PG,page*PG);
+  const colSpan = isAdmin ? 9 : 8;
   document.getElementById('tblCount').textContent=`${fmt(n)} articles`;
   document.getElementById('tBody').innerHTML=n===0
-    ?`<tr><td colspan="9" style="text-align:center;color:var(--tx3);padding:2rem">Aucun résultat</td></tr>`
+    ?`<tr><td colspan="${colSpan}" style="text-align:center;color:var(--tx3);padding:2rem">Aucun résultat</td></tr>`
     :slice.map(r=>`<tr>
       ${isAdmin?`<td>${srcBadge(r.Source)}</td>`:''}
-      <td class="mono">${r.ID_Immobilisation||'—'}</td>
-      <td title="${r.Lib_Article||''}">${r.Lib_Article||'—'}</td>
-      <td class="mono">${r.Cod_Article||'—'}</td>
+      <td class="mono">${normStr(r.ID_Immobilisation)||'—'}</td>
+      <td title="${normStr(r.Lib_Article)}">${normStr(r.Lib_Article)||'—'}</td>
+      <td class="mono">${normStr(r.Cod_Article)||'—'}</td>
       <td>${obsBadge(r.Observation)}</td>
-      <td class="mono">${r.Localisation||'—'}</td>
-      <td class="mono">${r.Gare||'—'}</td>
-      <td>${r.Inventoriste||'—'}</td>
+      <td class="mono">${normStr(r.Localisation)||'—'}</td>
+      <td class="mono">${gareVal(r)||'—'}</td>
+      <td>${invVal(r)||'—'}</td>
       <td class="mono" style="font-size:10px">${fmtDate(r["Date d'inventaire"])}</td>
     </tr>`).join('');
+
   document.getElementById('pagInfo').textContent=`Page ${page}/${pages} — ${fmt(n)} résultats`;
   const rangeP=[...new Set([1,page-1,page,page+1,pages].filter(p=>p>=1&&p<=pages))].sort((a,b)=>a-b);
   let html=`<button class="pb" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
   let prev=null;
-  rangeP.forEach(p=>{ if(prev&&p-prev>1)html+=`<span style="color:var(--tx3);padding:0 4px;font-size:10px">…</span>`; html+=`<button class="pb${p===page?' on':''}" onclick="goPage(${p})">${p}</button>`; prev=p; });
+  rangeP.forEach(p=>{
+    if(prev&&p-prev>1)html+=`<span style="color:var(--tx3);padding:0 4px;font-size:10px">…</span>`;
+    html+=`<button class="pb${p===page?' on':''}" onclick="goPage(${p})">${p}</button>`;
+    prev=p;
+  });
   html+=`<button class="pb" onclick="goPage(${page+1})" ${page===pages?'disabled':''}>›</button>`;
   document.getElementById('pagBtns').innerHTML=html;
 }
 
 function goPage(p){ const pages=Math.ceil(filteredData.length/PG)||1; if(p<1||p>pages)return; page=p; renderTable(); }
 
-// ════════════════════ EXPORT ════════════════════
+// ══════════════ DOWNLOAD / EXPORT ══════════════
+function buildDlSection(){
+  const zones=isAdmin?['CEBS','CEJ','AEBB']:[currentZone];
+  document.getElementById('dlGrid').innerHTML=zones.map(zone=>{
+    const cfg=ZONE_CONFIG[zone];
+    const bg=zone==='CEBS'?'#e0ecff':zone==='CEJ'?'#ede8ff':'#e2f7ee';
+    return`<div class="dl-card">
+      <div class="dl-icon" style="background:${bg}">${cfg.icon}</div>
+      <div class="dl-info"><div class="dl-name">INVENTAIRE-${zone}.xlsx</div><div class="dl-meta">Fichier source Google Sheets</div></div>
+      <a class="btn btn-grn" href="${cfg.dlHref}" target="_blank">↓ Télécharger</a>
+    </div>`;
+  }).join('');
+}
+
+function buildExportBtns(){
+  const el=document.getElementById('exportBtns');
+  if(isAdmin){
+    el.innerHTML=`
+      <button class="btn btn-acc" onclick="exportFiltered()">↓ Exporter la sélection</button>
+      <button class="btn btn-out" onclick="exportAll()">↓ Tout exporter (3 zones)</button>
+      <button class="btn btn-out" onclick="exportByZone('CEBS')">↓ CEBS</button>
+      <button class="btn btn-out" onclick="exportByZone('CEJ')">↓ CEJ</button>
+      <button class="btn btn-out" onclick="exportByZone('AEBB')">↓ AEBB</button>`;
+  } else {
+    el.innerHTML=`
+      <button class="btn btn-acc" onclick="exportFiltered()">↓ Exporter la sélection</button>
+      <button class="btn btn-out" onclick="exportAll()">↓ Exporter tout</button>`;
+  }
+}
+
 function exportFiltered(){ exportData(filteredData,'inventaire_'+(isAdmin?'admin':'zone_'+currentZone)+'_filtre'); }
-function exportAll(){      exportData(zoneData,    'inventaire_'+(isAdmin?'toutes_zones':currentZone)+'_complet'); }
+function exportAll(){      exportData(zoneData,'inventaire_'+(isAdmin?'toutes_zones':currentZone)+'_complet'); }
 function exportByZone(z){  exportData(zoneData.filter(r=>r.Source===z),'inventaire_'+z); }
+
 function exportData(data,name){
-  if(!data.length){toast('Aucune donnée à exporter');return;}
-  const ws=XLSX.utils.json_to_sheet(data);
+  if(!data.length){ toast('Aucune donnée à exporter'); return; }
+  // ★ Supprime la colonne Source pour les exports mono-zone
+  const clean = isAdmin ? data : data.map(r=>{ const {Source,...rest}=r; return rest; });
+  const ws=XLSX.utils.json_to_sheet(clean);
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'ARTICLES');
   XLSX.writeFile(wb,name+'_'+new Date().toISOString().slice(0,10)+'.xlsx');
   toast('Export téléchargé !');
 }
 
-// ════════════════════ TABS ════════════════════
+// ══════════════ TABS ══════════════
 function showTab(id){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('#mainNav .tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.getElementById('panel-'+id).classList.add('on');
-  // highlight tab button
   document.querySelectorAll('#mainNav .tab').forEach(t=>{
     if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('on');
   });
   if(id==='tableau'&&zoneData.length) applyFilters();
 }
 
-// ════════════════════ TOAST ════════════════════
+// ══════════════ TOAST ══════════════
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
 
-// ════════════════════ INIT ════════════════════
+// ══════════════ INIT ══════════════
 window.addEventListener('load',()=>{
   setTimeout(()=>{
     document.getElementById('loadScreen').style.display='none';
