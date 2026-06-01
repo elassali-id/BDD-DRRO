@@ -754,7 +754,7 @@ function buildKPIs() {
   const d=zoneData, n=d.length;
   const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
   const gares=[...new Set(d.map(gareVal).filter(Boolean))];
-  const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
+  const invs=[...new Set(d.map(invVal).filter(Boolean))];
   set('kTotal', fmt(n));
   set('kOk',   fmt(ok));   set('kOkP',   pct(ok,n)+' du total');
   set('kAv',   fmt(av));   set('kAvP',   pct(av,n)+' du total');
@@ -771,7 +771,7 @@ function buildAdminZoneCards() {
     const d=zoneData.filter(r=>r.Source===zone), n=d.length;
     const ok=d.filter(isOk).length, av=d.filter(isAv).length, disc=d.filter(isDisc).length, nd=d.filter(isNd).length;
     const gares=[...new Set(d.map(gareVal).filter(Boolean))];
-    const invs=[...new Set(d.map(r=>r.Inventoriste).filter(Boolean))];
+    const invs=[...new Set(d.map(invVal).filter(Boolean))];
     return `<div class="kpi-zone-card" style="--zcolor:${cfg.zcolor}">
       <div class="kpi-zone-title"><span class="${cfg.badgeClass}">${zone}</span></div>
       <div class="kpi-zone-main">${fmt(n)}</div>
@@ -812,7 +812,7 @@ function buildCharts() {
   // 2. Par inventoriste (horizontal)
   destroy('cInv');
   const invMap={};
-  d.forEach(r=>{ const k=(r.Inventoriste||'Inconnu').toString(); invMap[k]=(invMap[k]||0)+1; });
+  d.forEach(r=>{ const k=invVal(r)||'Inconnu'; invMap[k]=(invMap[k]||0)+1; });
   const invSort=Object.entries(invMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
   charts['cInv']=new Chart(document.getElementById('cInv'),{
     type:'bar',
@@ -926,28 +926,36 @@ function buildExportBtns() {
 }
 
 // ════════════════════ FILTERS ════════════════════
+// Normalize inventoriste: trim + collapse internal whitespace + lowercase for comparison
+const invVal = r => (r.Inventoriste||'').toString().trim().replace(/\s+/g,' ');
+
 function populateFilters() {
   const gares=[...new Set(zoneData.map(gareVal).filter(Boolean))].sort((a,b)=>+a-+b);
-  const invs=[...new Set(zoneData.map(r=>(r.Inventoriste||'').toString()).filter(Boolean))].sort();
-  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option>${g}</option>`).join('');
-  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option>${i}</option>`).join('');
+  // Use invVal() so options match exactly what applyFilters compares against
+  const invs=[...new Set(zoneData.map(invVal).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'}));
+  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option value="${g}">${g}</option>`).join('');
+  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option value="${i}">${i}</option>`).join('');
 }
 
 function applyFilters() {
   const src  = document.getElementById('fSrc').value;
   const obs  = document.getElementById('fObs').value;
   const gare = document.getElementById('fGare').value;
-  const inv  = document.getElementById('fInv').value;
-  const srch = document.getElementById('srch').value.toLowerCase();
+  const inv  = document.getElementById('fInv').value;  // already normalized (set by populateFilters)
+  const srch = document.getElementById('srch').value.toLowerCase().trim();
   filteredData = zoneData.filter(r=>{
     const ov=obsVal(r);
     if(src  && r.Source!==src) return false;
     if(gare && gareVal(r)!==gare) return false;
-    if(inv  && (r.Inventoriste||'').toString()!==inv) return false;
+    // Compare normalized inventoriste value with selected option (both trimmed)
+    if(inv  && invVal(r)!==inv) return false;
     if(obs==='vide'        && ov) return false;
     if(obs==='DISCORDANCE' && !ov.startsWith('DISCORDANCE')) return false;
     if(obs&&obs!=='vide'&&obs!=='DISCORDANCE'&&ov!==obs) return false;
-    if(srch){ const h=[r.ID_Immobilisation,r.Lib_Article,r.Cod_Article,r.Inventoriste].join(' ').toLowerCase(); if(!h.includes(srch)) return false; }
+    if(srch){
+      const h=[r.ID_Immobilisation,r.Lib_Article,r.Cod_Article,invVal(r)].join(' ').toLowerCase();
+      if(!h.includes(srch)) return false;
+    }
     return true;
   });
   page=1; renderTable();
