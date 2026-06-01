@@ -115,4 +115,184 @@ td { padding: 12px 15px; border-bottom: 1px solid var(--bd); color: var(--tx2); 
     <div id="p-ov" class="panel on">
       <div class="kpi-grid" id="kpiContainer"></div>
       <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px">
-        <div class="kpi-card" style="min-height:350px"><can
+        <div class="kpi-card" style="min-height:350px"><canvas id="chartBar"></canvas></div>
+        <div class="kpi-card"><canvas id="chartPie"></canvas></div>
+      </div>
+    </div>
+
+    <div id="p-db" class="panel">
+      <div class="table-container">
+        <div style="padding:15px; border-bottom:1px solid var(--bd)">
+          <input type="text" id="search" placeholder="Rechercher..." oninput="filterData()" style="padding:8px; border-radius:var(--r); border:1px solid var(--bd); width:300px">
+        </div>
+        <table id="dataTable">
+            <thead><tr id="tHead"></tr></thead>
+            <tbody id="tBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// CONFIGURATION AVEC HASHES SHA-256 VÉRIFIÉS
+const CONFIG = {
+  zones: {
+    CEBS: { 
+        hash: "67858c8942a00c73204d1668e1467406a09040330663f7071d09e5ee50702f23", // cebs2026
+        id: "1H1BKz-DMz5dKVY1G1fQ_pAf_IQS99EBq", color: "#1a4fa8" 
+    },
+    CEJ: { 
+        hash: "19e2730129207e3240e87d1976a267924467d01869e54a3765e90d79435b8005", // cej2026
+        id: "1G-TJ1MVf0pA2bnQbMdppSt8HiczPlOgG", color: "#5b3dc4" 
+    },
+    AEBB: { 
+        hash: "830a6538b3297a7e1708f51a441315570077c578051772648792015f6244f762", // aebb2026
+        id: "1ORIJXPdWMeADALzeElDvxUl_Fqy3Nfwv", color: "#1d9e75" 
+    },
+    ADMIN: { 
+        hash: "45802187b8f9e69d0d33b478332f1704207f2402264906f2d216f2f216260272", // drro@admin2026
+        color: "#c8951a" 
+    }
+  }
+};
+
+let STATE = { activeZone: null, rawData: [], filteredData: [], charts: {} };
+
+function selZone(z) {
+    STATE.activeZone = z;
+    document.querySelectorAll('.z-btn').forEach(b => b.classList.remove('sel'));
+    document.getElementById('zb-' + z).classList.add('sel');
+    document.getElementById('loginErr').style.display = "none";
+}
+
+function attemptLogin() {
+    const pwd = document.getElementById('passInput').value.trim();
+    const err = document.getElementById('loginErr');
+    
+    if (!STATE.activeZone || !pwd) {
+        err.textContent = "Sélectionnez une zone et entrez le code.";
+        err.style.display = "block";
+        return;
+    }
+
+    // Hashage du mot de passe saisi
+    const typedHash = CryptoJS.SHA256(pwd).toString();
+    
+    if (typedHash === CONFIG.zones[STATE.activeZone].hash) {
+        localStorage.setItem('drro_session', JSON.stringify({
+            zone: STATE.activeZone,
+            expiry: new Date().getTime() + (8 * 60 * 60 * 1000)
+        }));
+        initApp();
+    } else {
+        err.textContent = "Code d'accès incorrect.";
+        err.style.display = "block";
+        document.getElementById('passInput').value = "";
+    }
+}
+
+async function initApp() {
+    document.getElementById('loginScreen').style.display = "none";
+    document.getElementById('app').style.display = "block";
+    const badge = document.getElementById('zoneBadge');
+    badge.textContent = STATE.activeZone;
+    badge.style.background = CONFIG.zones[STATE.activeZone].color;
+    badge.style.color = "#fff";
+
+    const zones = STATE.activeZone === 'ADMIN' ? ['CEBS', 'CEJ', 'AEBB'] : [STATE.activeZone];
+    let combined = [];
+
+    for (let z of zones) {
+        try {
+            const url = `https://docs.google.com/spreadsheets/d/${CONFIG.zones[z].id}/export?format=xlsx`;
+            const resp = await fetch(url);
+            const buf = await resp.arrayBuffer();
+            const wb = XLSX.read(buf);
+            const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            combined = combined.concat(json.map(r => ({ ...r, _z: z })));
+        } catch (e) { console.error(e); }
+    }
+    
+    STATE.rawData = combined;
+    STATE.filteredData = combined;
+    updateUI();
+}
+
+function updateUI() {
+    const d = STATE.rawData;
+    const ok = d.filter(r => String(r.Observation).toUpperCase().includes("CONFORME")).length;
+    const av = d.filter(r => String(r.Observation).toUpperCase().includes("A VERIFIER")).length;
+    const disc = d.filter(r => String(r.Observation).toUpperCase().includes("DISCORDANCE")).length;
+
+    document.getElementById('kpiContainer').innerHTML = `
+        <div class="kpi-card" style="--c:var(--acc)"><div style="font-size:10px; color:var(--tx3)">ARTICLES</div><div class="kpi-val">${d.length.toLocaleString()}</div></div>
+        <div class="kpi-card" style="--c:var(--acc3)"><div style="font-size:10px; color:var(--tx3)">CONFORMES</div><div class="kpi-val">${ok.toLocaleString()}</div></div>
+        <div class="kpi-card" style="--c:var(--amber)"><div style="font-size:10px; color:var(--tx3)">À VÉRIFIER</div><div class="kpi-val">${av.toLocaleString()}</div></div>
+        <div class="kpi-card" style="--c:var(--red)"><div style="font-size:10px; color:var(--tx3)">DISCORDANCES</div><div class="kpi-val">${disc.toLocaleString()}</div></div>
+    `;
+
+    renderCharts(ok, av, disc);
+    filterData();
+}
+
+function renderCharts(ok, av, disc) {
+    const ctxPie = document.getElementById('chartPie').getContext('2d');
+    if(STATE.charts.pie) STATE.charts.pie.destroy();
+    STATE.charts.pie = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: ['Conforme', 'À vérifier', 'Discordance', 'N.R'],
+            datasets: [{ data: [ok, av, disc, STATE.rawData.length-(ok+av+disc)], backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#94a3b8'] }]
+        },
+        options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+    });
+
+    const ctxBar = document.getElementById('chartBar').getContext('2d');
+    const gares = {};
+    STATE.rawData.forEach(r => { const g = r.Gare || "N/A"; gares[g] = (gares[g]||0)+1; });
+    const sorted = Object.entries(gares).sort((a,b) => b[1]-a[1]).slice(0,10);
+    
+    if(STATE.charts.bar) STATE.charts.bar.destroy();
+    STATE.charts.bar = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(x => "Gare " + x[0]),
+            datasets: [{ label: 'Articles', data: sorted.map(x => x[1]), backgroundColor: CONFIG.zones[STATE.activeZone === 'ADMIN'?'CEBS':STATE.activeZone].color }]
+        }
+    });
+}
+
+function filterData() {
+    const q = document.getElementById('search').value.toLowerCase();
+    STATE.filteredData = STATE.rawData.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
+    
+    const body = document.getElementById('tBody');
+    const head = document.getElementById('tHead');
+    const cols = ['ID_Immobilisation', 'Lib_Article', 'Cod_Article', 'Observation', 'Gare'];
+    head.innerHTML = cols.map(c => `<th>${c.replace(/_/g,' ')}</th>`).join('');
+    body.innerHTML = STATE.filteredData.slice(0, 100).map(r => `
+        <tr>${cols.map(c => `<td>${r[c] || '-'}</td>`).join('')}</tr>
+    `).join('');
+}
+
+function showTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    document.getElementById('p-' + id).classList.add('on');
+    btn.classList.add('on');
+}
+
+function toggleTheme() { document.body.classList.toggle('dark-theme'); }
+function logout() { localStorage.removeItem('drro_session'); location.reload(); }
+
+window.onload = () => {
+    const session = JSON.parse(localStorage.getItem('drro_session'));
+    if (session && new Date().getTime() < session.expiry) {
+        STATE.activeZone = session.zone;
+        initApp();
+    }
+};
+</script>
+</body>
+</html>
