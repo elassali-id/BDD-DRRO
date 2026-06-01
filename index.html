@@ -375,7 +375,7 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
     <div class="tbl-hdr">
       <span class="tbl-count" id="tblCount">—</span>
       <div class="tbl-controls">
-        <input type="text" id="srch" placeholder="🔍 ID, libellé, code..." oninput="applyFilters()">
+        <input type="text" id="srch" placeholder="🔍 ID, libellé, CODE..." oninput="applyFilters()">
         <!-- Admin sees zone filter, zone users don't -->
         <select id="fSrc" onchange="applyFilters()" style="display:none">
           <option value="">Toutes zones</option>
@@ -401,7 +401,7 @@ td.mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
           <th id="thZone" onclick="sortTbl('Source')" style="display:none">ZONE</th>
           <th onclick="sortTbl('ID_Immobilisation')">ID IMO..</th>
           <th onclick="sortTbl('Lib_Article')">Lib_Article</th>
-          <th onclick="sortTbl('NumSerie')">N° Serie</th>
+          <th onclick="sortTbl('Cod_Article')">CODE</th>
           <th onclick="sortTbl('Observation')">OBSERVATION</th>
           <th onclick="sortTbl('Localisation')">LOCAL.</th>
           <th onclick="sortTbl('Gare')">GARE</th>
