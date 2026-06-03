@@ -690,9 +690,18 @@ function doLogout() {
   document.getElementById('loginPwd').value = '';
   document.getElementById('loginErr').style.display = 'none';
 
-  // Afficher le login AVANT tout le reste
-  document.getElementById('appShell').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
+const appShell = document.getElementById('appShell');
+const loginScreen = document.getElementById('loginScreen');
+
+if (appShell) {
+    appShell.style.display = 'none';
+}
+
+if (loginScreen) {
+    loginScreen.style.display = 'flex';
+    loginScreen.hidden = false;
+    loginScreen.classList.remove('hidden');
+}
 
   console.log('Logout OK');
 }
