@@ -256,7 +256,7 @@ td.short{white-space:nowrap;max-width:120px}
       <div class="zone-btn admin-zone" id="zBtn-ADMIN" onclick="selectZone('ADMIN')" style="display:flex;align-items:center;gap:10px;padding:12px 16px;text-align:left">
         <div class="zone-btn-icon" style="font-size:18px;margin:0"></div>
         <div>
-          <div class="zone-btn-label" style="font-size:11px">ADMINISTRATEUR</div>
+          <div class="zone-btn-label" style="font-size:11px">DRRO</div>
           <div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px">Accès toutes zones</div>
         </div>
       </div>
@@ -791,22 +791,6 @@ function setupAppHeader() {
   document.getElementById('adminZoneCards').style.display = isAdmin ? 'block' : 'none';
   document.getElementById('adminChartSection').style.display = isAdmin ? 'block' : 'none';
   document.getElementById('fSrc').style.display = isAdmin ? '' : 'none';
-}
-function doLogout() {
-  clearSession();
-  if (sessionExpiryInterval) clearInterval(sessionExpiryInterval);
-  if (updateCheckInterval) clearInterval(updateCheckInterval);
-  currentZone = null; isAdmin = false; selectedLoginZone = null;
-  zoneData = []; filteredData = []; lastCounts = {}; sourceHeaders = [];
-  // BDD-DRRO: Drive links only, nothing to reset
-  Object.keys(charts).forEach(k => { try { charts[k].destroy(); } catch (e) {} }); charts = {};
-  document.getElementById('sessionExpiryBadge').style.display = 'none';
-  document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('sel'));
-  document.getElementById('loginPwd').value = '';
-  document.getElementById('loginErr').style.display = 'none';
-  document.getElementById('appShell').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  showTab('overview');
 }
 
 // ═══════════════════════════ NAV ═══════════════════════════
