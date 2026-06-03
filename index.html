@@ -683,9 +683,6 @@ function doLogout() {
 
   charts = {};
 
-  const badge = document.getElementById('sessionExpiryBadge');
-  if (badge) badge.style.display = 'none';
-
   document.querySelectorAll('.zone-btn').forEach(btn => {
     btn.classList.remove('sel');
   });
@@ -693,10 +690,11 @@ function doLogout() {
   document.getElementById('loginPwd').value = '';
   document.getElementById('loginErr').style.display = 'none';
 
+  // Afficher le login AVANT tout le reste
   document.getElementById('appShell').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
 
-  showTab('overview');
+  console.log('Logout OK');
 }
 
 window.addEventListener('load', () => {
