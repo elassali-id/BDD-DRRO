@@ -526,45 +526,171 @@ let sourceHeaders = [];
 // BDD-DRRO: Google Drive links only (no embedded data)
 
 // ═══════════════════════════ SESSION ═══════════════════════════
+
 const SESSION_KEY = 'drro-session-v2';
 const SESSION_HOURS = 8;
+let sessionExpiryInterval = null;
+
 function saveSession(zone) {
-  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ zone, expiry: Date.now() + SESSION_HOURS * 3600000 })); } catch (e) {}
+    try {
+        localStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify({
+                zone,
+                expiry: Date.now() + (SESSION_HOURS * 3600000)
+            })
+        );
+    } catch (e) {
+        console.error('Erreur sauvegarde session:', e);
+    }
 }
-function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
+
+function clearSession() {
+    try {
+        localStorage.removeItem(SESSION_KEY);
+    } catch (e) {
+        console.error('Erreur suppression session:', e);
+    }
+}
+
 function readSession() {
-  try {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    const s = JSON.parse(raw);
-    if (!s || !s.zone || !s.expiry || Date.now() > s.expiry) { clearSession(); return null; }
-    return s;
-  } catch (e) { return null; }
+    try {
+        const raw = localStorage.getItem(SESSION_KEY);
+
+        if (!raw) return null;
+
+        const session = JSON.parse(raw);
+
+        if (
+            !session ||
+            !session.zone ||
+            !session.expiry ||
+            Date.now() > session.expiry
+        ) {
+            clearSession();
+            return null;
+        }
+
+        return session;
+    } catch (e) {
+        console.error('Erreur lecture session:', e);
+        return null;
+    }
 }
+
 function startSessionExpiryCountdown(expiry) {
-  if (sessionExpiryInterval) clearInterval(sessionExpiryInterval);
-  const badge = document.getElementById('sessionExpiryBadge');
-  if (!badge) return;
-  const update = () => {
-    const remaining = expiry - Date.now();
-    if (remaining <= 0) { clearInterval(sessionExpiryInterval); toast('Session expirée'); setTimeout(doLogout, 1500); return; }
-    badge.style.display = '';
-    const h = Math.floor(remaining / 3600000), m = Math.floor((remaining % 3600000) / 60000);
-    badge.textContent = h > 0 ? `⏱ ${h}h${m.toString().padStart(2,'0')}` : `⏱ ${m}min`;
-    if (remaining < 600000) { badge.style.color = 'var(--amber)'; badge.style.borderColor = 'var(--amber)'; }
-  };
-  update(); sessionExpiryInterval = setInterval(update, 30000);
+
+    if (sessionExpiryInterval) {
+        clearInterval(sessionExpiryInterval);
+    }
+
+    const badge = document.getElementById('sessionExpiryBadge');
+
+    if (!badge) return;
+
+    const update = () => {
+
+        const remaining = expiry - Date.now();
+
+        if (remaining <= 0) {
+            clearInterval(sessionExpiryInterval);
+            sessionExpiryInterval = null;
+
+            toast('Session expirée');
+
+            setTimeout(() => {
+                doLogout();
+            }, 1500);
+
+            return;
+        }
+
+        badge.style.display = '';
+
+        const hours = Math.floor(remaining / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+
+        badge.textContent =
+            hours > 0
+                ? `⏱ ${hours}h${minutes.toString().padStart(2, '0')}`
+                : `⏱ ${minutes}min`;
+
+        if (remaining < 600000) {
+            badge.style.color = 'var(--amber)';
+            badge.style.borderColor = 'var(--amber)';
+        }
+    };
+
+    update();
+    sessionExpiryInterval = setInterval(update, 30000);
 }
+
 function restoreSession() {
-  const s = readSession();
-  if (!s || !ZONE_CONFIG[s.zone]) return false;
-  currentZone = s.zone; isAdmin = (currentZone === 'ADMIN'); selectedLoginZone = s.zone;
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  setupAppHeader(); buildNav(); buildDlSection(); buildExportBtns(); reloadData();
-  startSessionExpiryCountdown(s.expiry);
-  return true;
+
+    const session = readSession();
+
+    if (!session || !ZONE_CONFIG[session.zone]) {
+        return false;
+    }
+
+    currentZone = session.zone;
+    selectedLoginZone = session.zone;
+    isAdmin = (session.zone === 'ADMIN');
+
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display = 'block';
+
+    setupAppHeader();
+    buildNav();
+    buildDlSection();
+    buildExportBtns();
+    reloadData();
+
+    startSessionExpiryCountdown(session.expiry);
+
+    return true;
 }
+
+function doLogout() {
+
+    clearSession();
+
+    if (sessionExpiryInterval) {
+        clearInterval(sessionExpiryInterval);
+        sessionExpiryInterval = null;
+    }
+
+    currentZone = null;
+    selectedLoginZone = null;
+    isAdmin = false;
+
+    const badge = document.getElementById('sessionExpiryBadge');
+    if (badge) {
+        badge.style.display = 'none';
+    }
+
+    document.getElementById('appShell').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+
+    const passwordInput = document.getElementById('passwordInput');
+    if (passwordInput) {
+        passwordInput.value = '';
+    }
+
+    toast('Déconnexion réussie');
+}
+
+// ═══════════════════════════ INITIALISATION ═══════════════════════════
+
+window.addEventListener('load', () => {
+
+    const restored = restoreSession();
+
+    if (!restored) {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('appShell').style.display = 'none';
+    }
+});
 
 // ═══════════════════════════ THEME ═══════════════════════════
 function applyTheme(theme) {
