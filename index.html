@@ -92,7 +92,7 @@ header{background:var(--s1);border-bottom:1.5px solid var(--bd);height:54px;disp
 .zone-badge-hdr{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
 .zone-badge-hdr.admin-badge{background:color-mix(in srgb,var(--gold) 18%,var(--s1));color:var(--gold);border:1px solid var(--gold)}
 .session-expiry-badge{font-family:var(--mono);font-size:10px;color:var(--tx3);padding:3px 8px;border-radius:5px;border:1px solid var(--bd);background:var(--s2)}
-.btn-logout{font-family:var(--mono);font-size:10px;padding:6px 10px;border-radius:5px;background:transparent;border:1.5px solid var(--bd);color:var(--tx3);cursor:pointer;transition:.15s}
+.btn-logout{font-family:var(--mono);font-size:10px;padding:6px 10px;border-radius:5px;background:var(--s2);border:1.5px solid var(--bd);color:var(--red);cursor:pointer;transition:.15s}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
 
 /* TABS */
@@ -245,9 +245,9 @@ td, .kpi-val, .kpi-zone-main, input, select {
     </div>
     <div class="admin-btn-row">
       <div class="zone-btn admin-zone" id="zBtn-ADMIN" onclick="selectZone('ADMIN')" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
-        <div style="font-size:22px" title="Accès administrateur — toutes zones">🛡️</div>
+        <div style="font-size:22px" title="Accès administrateur — toutes zones">🧭</div>
 
-        <div><div class="zone-btn-label" style="font-size:11px">DRRO — TOUTES ZONES</div><div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px">ADMINISTRATEUR</div></div>
+        <div><div class="zone-btn-label" style="font-size:11px">DRRO — TOUTES ZONES</div><div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px"></div></div>
       </div>
     </div>
     <div id="loginErr" class="login-err"></div>
@@ -336,7 +336,7 @@ td, .kpi-val, .kpi-zone-main, input, select {
     <div class="tbl-hdr">
       <span class="tbl-count" id="tblCount">—</span>
       <div class="tbl-controls">
-        <input type="text" id="srch" placeholder="🔍 Recherche dans toutes les colonnes..." oninput="applyFilters()">
+        <input type="text" id="srch" placeholder="🔍 Recherche..." oninput="applyFilters()">
         <select id="fSrc" onchange="applyFilters()" style="display:none">
           <option value="">Toutes zones</option>
           <option value="CEBS">CEBS</option>
@@ -516,7 +516,7 @@ function launchApp() {
 function setupHeader() {
   const cfg=ZONE_CONFIG[currentZone]||{};
   const badge=document.getElementById('hdrZoneBadge');
-  if (isAdmin) { badge.textContent='🛡️ ADMIN'; badge.className='zone-badge-hdr admin-badge'; }
+  if (isAdmin) { badge.textContent='🧭 DRRO'; badge.className='zone-badge-hdr admin-badge'; }
 
   else { badge.textContent=currentZone; badge.className='zone-badge-hdr '+(cfg.badgeClass||''); }
   set('ovZoneLabel', isAdmin?'Toutes zones':currentZone);
