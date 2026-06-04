@@ -177,7 +177,7 @@ tbody tr:last-child{border-bottom:none}
 td{padding:7px 10px;color:var(--tx2);vertical-align:top;line-height:1.4;font-size:11px}
 td.mono{font-family:var(--mono);font-size:10px;color:var(--acc);white-space:nowrap}
 td.wrap{max-width:260px;word-break:break-word}
-td.short{white-space:nowrap;max-width:120px}
+td.short{white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
 
 /* PAGINATION */
 .pag{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--bd);flex-wrap:wrap;gap:8px}
@@ -318,7 +318,7 @@ td.short{white-space:nowrap;max-width:120px}
     <div class="tbl-hdr">
       <span class="tbl-count" id="tblCount">—</span>
       <div class="tbl-controls">
-        <input type="text" id="srch" placeholder="🔍 ID, libellé, CODE..." oninput="applyFilters()">
+        <input type="text" id="srch" placeholder="🔍 Recherche dans toutes les colonnes..." oninput="applyFilters()">
         <select id="fSrc" onchange="applyFilters()" style="display:none">
           <option value="">Toutes zones</option>
           <option value="CEBS">CEBS</option>
@@ -333,6 +333,7 @@ td.short{white-space:nowrap;max-width:120px}
           <option value="vide">Non renseigné</option>
         </select>
         <select id="fGare" onchange="applyFilters()"><option value="">Toutes gares</option></select>
+        <select id="fLoc" onchange="applyFilters()"><option value="">Toutes localisations</option></select>
         <select id="fInv" onchange="applyFilters()"><option value="">Tous inventoristes</option></select>
         <button class="btn btn-out btn-sm" onclick="exportFiltered()">↓ Export Excel</button>
       </div>
@@ -661,6 +662,9 @@ function setStatus(txt,ok) {
 const obsVal=r=>(r.Observation||'').toString().toUpperCase().trim();
 const gareVal=r=>(r.Gare||'').toString().trim();
 const invVal=r=>(r.Inventoriste||'').toString().trim().replace(/\s+/g,' ');
+let locCol=null;
+function findLocCol(){ locCol = sourceHeaders.find(h=>/local/i.test(h)) || null; }
+const locVal=r=> locCol?(r[locCol]||'').toString().trim():'';
 const isOk=r=>obsVal(r)==='CONFORME';
 const isAv=r=>obsVal(r)==='A VERIFIER';
 const isDisc=r=>obsVal(r).startsWith('DISCORDANCE');
@@ -743,7 +747,7 @@ function buildDlSection() {
   const zones=isAdmin?['CEBS','CEJ','AEBB']:[currentZone];
   document.getElementById('dlGrid').innerHTML=zones.map(zone=>{
     const cfg=ZONE_CONFIG[zone];
-    return `<div class="dl-card"><div class="dl-icon" style="background:var(--s3)">${cfg.icon}</div><div class="dl-info"><div class="dl-name">INVENTAIRE-${zone}.xlsx</div><div class="dl-meta">Fichier source Google Sheets</div></div><a class="btn btn-grn" href="${cfg.dlHref}" target="_blank">↓ Télécharger</a></div>`;
+    return `<div class="dl-card"><div class="dl-icon" style="background:var(--s3)">${cfg.icon}</div><div class="dl-info"><div class="dl-name">INVENTAIRE-${zone}.xlsx</div><div class="dl-meta">Fichier source Google Sheets</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-grn" href="${cfg.dlHref}" target="_blank" rel="noopener">↓ Télécharger</a><a class="btn btn-gold" href="https://docs.google.com/spreadsheets/d/${cfg.id}/edit" target="_blank" rel="noopener">↗ Ouvrir</a></div></div>`;
   }).join('');
   const bddSec=document.getElementById('bddDlSection');
   if (bddSec) bddSec.style.display=isAdmin?'block':'none';
@@ -761,28 +765,34 @@ function buildExportBtns() {
 
 // ═══════════════════════════ FILTERS ═══════════════════════════
 function populateFilters() {
+  findLocCol();
   const gares=[...new Set(zoneData.map(gareVal).filter(Boolean))].sort((a,b)=>+a-+b);
   const invs=[...new Set(zoneData.map(invVal).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'}));
-  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option value="${g}">${g}</option>`).join('');
-  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option value="${i}">${i}</option>`).join('');
+  const locs=[...new Set(zoneData.map(locVal).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr',{numeric:true,sensitivity:'base'}));
+  document.getElementById('fGare').innerHTML='<option value="">Toutes gares</option>'+gares.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  document.getElementById('fInv').innerHTML='<option value="">Tous inventoristes</option>'+invs.map(i=>`<option value="${esc(i)}">${esc(i)}</option>`).join('');
+  document.getElementById('fLoc').innerHTML='<option value="">Toutes localisations</option>'+locs.map(l=>`<option value="${esc(l)}">${esc(l)}</option>`).join('');
 }
 function applyFilters() {
   const src=document.getElementById('fSrc').value, obs=document.getElementById('fObs').value;
   const gare=document.getElementById('fGare').value, inv=document.getElementById('fInv').value;
+  const loc=document.getElementById('fLoc').value;
   const srch=document.getElementById('srch').value.toLowerCase().trim();
   filteredData=zoneData.filter(r=>{
     const ov=obsVal(r);
     if(src&&r.Source!==src) return false;
     if(gare&&gareVal(r)!==gare) return false;
     if(inv&&invVal(r)!==inv) return false;
+    if(loc&&locVal(r)!==loc) return false;
     if(obs==='vide'&&ov) return false;
     if(obs==='DISCORDANCE'&&!ov.startsWith('DISCORDANCE')) return false;
     if(obs&&obs!=='vide'&&obs!=='DISCORDANCE'&&ov!==obs) return false;
-    if(srch){const h=[r.ID_Immobilisation,r.Lib_Article,r.Cod_Article,invVal(r)].join(' ').toLowerCase();if(!h.includes(srch))return false;}
+    if(srch){const h=Object.keys(r).map(k=>{const v=r[k];return v instanceof Date?v.toLocaleDateString('fr'):(v==null?'':v.toString());}).join(' ').toLowerCase();if(!h.includes(srch))return false;}
     return true;
   });
   page=1; renderTable();
 }
+
 
 // ═══════════════════════════ TABLE ═══════════════════════════
 function displayCols() { return (isAdmin?['Source']:[]).concat(sourceHeaders.filter(h=>h&&h!=='Source')); }
@@ -792,7 +802,7 @@ function renderCell(r,c) {
   if(c==='Observation') return `<td>${obsBadge(r.Observation)}</td>`;
   const v=r[c];
   if(/date/i.test(c)) return `<td class="mono" style="font-size:10px">${fmtDate(v)}</td>`;
-  if(/^(ID|Cod|Code|Gare|Local|Qte|N°|Num|PU|Lib_Marque|Lib_Modele)/i.test(c)) return `<td class="short">${esc(v)||'—'}</td>`;
+  if(/^(ID|Cod|Code|Gare|Local|Qte|PU|Lib_Marque|Lib_Modele)/i.test(c)) return `<td class="short">${esc(v)||'—'}</td>`;
   return `<td class="wrap">${esc(v)||'—'}</td>`;
 }
 function buildTableHead() {
