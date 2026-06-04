@@ -237,7 +237,7 @@ td.short{white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellips
     <div class="admin-btn-row">
       <div class="zone-btn admin-zone" id="zBtn-ADMIN" onclick="selectZone('ADMIN')" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
         <div style="font-size:20px">👑</div>
-        <div><div class="zone-btn-label" style="font-size:11px">DRRO</div><div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px">Accès toutes zones</div></div>
+        <div><div class="zone-btn-label" style="font-size:11px">DRRO — TOUTES ZONES</div><div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px">ADMINISTRATEUR</div></div>
       </div>
     </div>
     <div id="loginErr" class="login-err"></div>
@@ -259,6 +259,7 @@ td.short{white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellips
   <div class="logo"><span class="acc">DRRO</span><span class="sep"> / </span>INVENTAIRE 2026 / ELASSALI IDRISS</div>
   <div class="hdr-right">
     <span id="hdrZoneBadge" class="zone-badge-hdr"></span>
+    <span id="sessionExpiryBadge" class="session-expiry-badge" style="display:none"></span>
     <div class="status-dot" id="statusDot" style="background:var(--tx3);box-shadow:none"></div>
     <span class="status-txt" id="statusTxt">Chargement...</span>
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
@@ -317,7 +318,7 @@ td.short{white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellips
     <div class="tbl-hdr">
       <span class="tbl-count" id="tblCount">—</span>
       <div class="tbl-controls">
-        <input type="text" id="srch" placeholder="🔍 Recherche..." oninput="applyFilters()">
+        <input type="text" id="srch" placeholder="🔍 Recherche dans toutes les colonnes..." oninput="applyFilters()">
         <select id="fSrc" onchange="applyFilters()" style="display:none">
           <option value="">Toutes zones</option>
           <option value="CEBS">CEBS</option>
