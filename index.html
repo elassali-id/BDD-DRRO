@@ -194,6 +194,67 @@ td, .kpi-val, .kpi-zone-main, input, select {
 .refresh-btn{font-family:var(--mono);font-size:10px;padding:6px 10px;border-radius:5px;background:transparent;border:1.5px solid var(--bd);color:var(--tx3);cursor:pointer;transition:.15s}
 .refresh-btn:hover{border-color:var(--acc);color:var(--acc)}
 .spinning{opacity:.5;transition:opacity .2s}
+
+/* ==========================================
+   MOBILE / TABLETTE
+========================================== */
+
+@media (max-width: 768px){
+  body{font-size:13px;}
+  .wrap,
+  .container{padding-left:10px !important;padding-right:10px !important;}
+
+  /* Header */
+  .topbar,
+  .header,
+  .head{flex-direction:column !important;align-items:stretch !important;gap:10px !important;}
+
+  /* Boutons */
+  .btn,
+  button{width:100%;min-height:44px;justify-content:center;}
+  .btn-group,
+  .actions,
+  .toolbar,
+  .filters{display:flex !important;flex-direction:column !important;gap:8px !important;}
+
+  /* KPI */
+  .kpi-grid,
+  .stats-grid,
+  .cards-grid{grid-template-columns:1fr !important;}
+
+  /* Cartes */
+  .card{min-width:0 !important;}
+
+  /* Tableaux */
+  table{min-width:900px;}
+  .table-wrap,
+  .table-container{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+
+  /* Filtres */
+  select,
+  input,
+  textarea{width:100% !important;}
+  .filter-row{display:flex !important;flex-direction:column !important;gap:8px;}
+
+  /* Graphiques */
+  canvas{max-width:100% !important;}
+  .chart-card{height:320px !important;}
+
+  /* Téléchargements */
+  .dl-card{flex-direction:column !important;align-items:flex-start !important;gap:12px !important;}
+
+  /* Export */
+  #exportBtns{display:flex !important;flex-direction:column !important;gap:8px !important;}
+  #exportBtns .btn{width:100%;}}
+  
+/* PETITS TELEPHONES */
+@media (max-width:480px){
+  .loader-logo{font-size:34px !important;}
+  .loader-title{font-size:14px !important;letter-spacing:.15em !important;}
+  .loader-author{font-size:10px !important;}
+  h1{font-size:20px !important;}
+  h2{{font-size:18px !important;}
+  h3{font-size:16px !important;}}
 </style>
 </head>
 <body>
