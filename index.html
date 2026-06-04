@@ -622,7 +622,7 @@ function launchApp() {
 function setupHeader() {
   const cfg=ZONE_CONFIG[currentZone]||{};
   const badge=document.getElementById('hdrZoneBadge');
-  if (isAdmin) { badge.textContent='🧭 DRRO'; badge.className='zone-badge-hdr admin-badge'; }
+  if (isAdmin) { badge.textContent='DRRO'; badge.className='zone-badge-hdr admin-badge'; }
 
   else { badge.textContent=currentZone; badge.className='zone-badge-hdr '+(cfg.badgeClass||''); }
   set('ovZoneLabel', isAdmin?'Toutes zones':currentZone);
