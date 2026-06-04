@@ -12,85 +12,105 @@
 :root,
 html[data-theme="light"]{
   --bg:#F7FAFC;
-
   --s1:#FFFFFF;
   --s2:#F8FAFC;
   --s3:#EDF2F7;
-
   --bd:#E2E8F0;
   --bd2:#CBD5E0;
-
   --acc:#1A365D;
   --acc2:#DD6B20;
   --acc3:#38A169;
-
   --amber:#B7791F;
   --red:#C53030;
   --blue:#2C5282;
-
   --tx:#0F2645;
   --tx2:#2C5282;
   --tx3:#718096;
-
   --gold:#F6CB46;
-
   --thead:#EDF2F7;
-
   --shadow-sm:0 1px 3px rgba(26,54,93,.08);
   --shadow:0 6px 22px -8px rgba(26,54,93,.16);
   --shadow-lg:0 18px 48px -16px rgba(26,54,93,.24);
-
   --grad:linear-gradient(135deg,#1A365D,#2C5282);
-
   --mono:'IBM Plex Mono',ui-monospace,monospace;
   --sans:'Inter',system-ui,sans-serif;
-
   --r:8px;
   --r2:12px;
   --r3:16px;
 }
-
 html[data-theme="dark"]{
   --bg:#0F172A;
-
   --s1:#162033;
   --s2:#1C2840;
   --s3:#24324F;
-
   --bd:#334155;
   --bd2:#475569;
-
   --acc:#5B9BFF;
   --acc2:#FB923C;
   --acc3:#4ADE80;
-
   --amber:#F6CB46;
   --red:#F87171;
   --blue:#60A5FA;
-
   --tx:#F8FAFC;
   --tx2:#CBD5E1;
   --tx3:#94A3B8;
-
   --gold:#FFD95A;
-
   --thead:#1E293B;
-
   --shadow-sm:0 1px 3px rgba(0,0,0,.35);
   --shadow:0 6px 22px -8px rgba(0,0,0,.50);
   --shadow-lg:0 18px 48px -16px rgba(0,0,0,.65);
-
   --grad:linear-gradient(135deg,#274C7A,#3B6AA6);
 }
 body{background:var(--bg);color:var(--tx);font-family:var(--sans);min-height:100vh;font-size:14px;transition:background .3s,color .3s}
 
 /* LOADING */
-#loadScreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.spinner{width:40px;height:40px;border:2px solid var(--bd2);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.load-bar{width:280px;height:3px;background:var(--bd);border-radius:99px;overflow:hidden}
-.load-fill{height:100%;background:var(--grad);border-radius:99px;transition:width .4s;width:0%}
-.load-status{font-family:var(--mono);font-size:12px;color:var(--tx2);text-align:center}
+#loadScreen{
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+#loadScreen > div{
+    width:420px;
+    max-width:90vw;
+    text-align:center;
+}
+.spinner{
+    width:52px;
+    height:52px;
+    margin:24px auto;
+    border:3px solid var(--bd);
+    border-top:3px solid var(--acc);
+    border-radius:50%;
+    animation:spin .9s linear infinite;
+}
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+.load-bar{
+    width:100%;
+    height:8px;
+    background:var(--s3);
+    border:1px solid var(--bd);
+    border-radius:999px;
+    overflow:hidden;
+}
+.load-fill{
+    width:0%;
+    height:100%;
+    background:var(--grad);
+    border-radius:999px;
+    transition:width .3s ease;
+}
+.load-status{
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--tx2);
+}
 
 /* THEME */
 .theme-toggle{background:var(--s2);border:1.5px solid var(--bd);border-radius:99px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:.2s;color:var(--tx2)}
@@ -269,7 +289,7 @@ td, .kpi-val, .kpi-zone-main, input, select {
     <div style="margin-bottom:22px">
         <div style="
             font-family:var(--mono);
-            font-size:28px;
+            font-size:54px;
             font-weight:800;
             letter-spacing:.18em;
             text-align:center;
@@ -283,7 +303,7 @@ td, .kpi-val, .kpi-zone-main, input, select {
         </div>
         <div style="
             font-family:var(--mono);
-            font-size:12px;
+            font-size:18px;
             font-weight:600;
             letter-spacing:.32em;
             color:var(--tx);
@@ -294,7 +314,7 @@ td, .kpi-val, .kpi-zone-main, input, select {
         </div>
         <div style="
             font-family:var(--mono);
-            font-size:9px;
+            font-size:11px;
             font-weight:500;
             letter-spacing:.25em;
             color:var(--tx3);
