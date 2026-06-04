@@ -231,7 +231,12 @@ td, .kpi-val, .kpi-zone-main, input, select {
 <div id="loginScreen">
   <button class="theme-toggle theme-toggle-login" onclick="toggleTheme()" id="themeBtnLogin">🌙</button>
   <div class="login-box">
-    <div style="font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--tx);text-align:center;margin-bottom:20px"><span style="color:var(--acc)">DRRO</span> / INVENTAIRE 2026</div>
+    <div style="margin-bottom:22px">
+      <div style="font-family:var(--mono);font-size:28px;font-weight:800;letter-spacing:.18em;text-align:center;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">DRRO</div>
+      <div style="font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:8px">INVENTAIRE 2026</div>
+      <div style="font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.25em;color:var(--tx3);text-align:center;margin-top:6px">ELASSALI IDRISS</div>
+    </div>
+
     <div class="login-sub">Sélectionnez votre zone et saisissez votre code d'accès</div>
     <div class="login-zone-grid">
       <div class="zone-btn" id="zBtn-CEBS" onclick="selectZone('CEBS')"><div class="zone-btn-icon">📘</div><div class="zone-btn-label">CEBS</div></div>
@@ -240,7 +245,8 @@ td, .kpi-val, .kpi-zone-main, input, select {
     </div>
     <div class="admin-btn-row">
       <div class="zone-btn admin-zone" id="zBtn-ADMIN" onclick="selectZone('ADMIN')" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
-        <div style="font-size:20px">👑</div>
+        <div style="font-size:22px" title="Accès administrateur — toutes zones">🛡️</div>
+
         <div><div class="zone-btn-label" style="font-size:11px">DRRO — TOUTES ZONES</div><div style="font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:2px">ADMINISTRATEUR</div></div>
       </div>
     </div>
@@ -260,7 +266,15 @@ td, .kpi-val, .kpi-zone-main, input, select {
 <!-- APP -->
 <div id="appShell" style="display:none">
 <header>
-  <div class="logo"><span class="acc">DRRO</span><span class="sep"> / </span>INVENTAIRE 2026 / ELASSALI IDRISS</div>
+  <div class="logo" style="display:flex;align-items:center;gap:12px">
+    <span style="font-family:var(--mono);font-size:18px;font-weight:800;letter-spacing:.16em;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">DRRO</span>
+    <span style="width:1px;height:22px;background:var(--bd2)"></span>
+    <span style="display:flex;flex-direction:column;line-height:1.15">
+      <span style="font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--tx)">INVENTAIRE 2026</span>
+      <span style="font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:var(--tx3);margin-top:2px">ELASSALI IDRISS</span>
+    </span>
+  </div>
+
   <div class="hdr-right">
     <span id="hdrZoneBadge" class="zone-badge-hdr"></span>
     <span id="sessionExpiryBadge" class="session-expiry-badge" style="display:none"></span>
@@ -502,7 +516,8 @@ function launchApp() {
 function setupHeader() {
   const cfg=ZONE_CONFIG[currentZone]||{};
   const badge=document.getElementById('hdrZoneBadge');
-  if (isAdmin) { badge.textContent='👑 ADMIN'; badge.className='zone-badge-hdr admin-badge'; }
+  if (isAdmin) { badge.textContent='🛡️ ADMIN'; badge.className='zone-badge-hdr admin-badge'; }
+
   else { badge.textContent=currentZone; badge.className='zone-badge-hdr '+(cfg.badgeClass||''); }
   set('ovZoneLabel', isAdmin?'Toutes zones':currentZone);
   document.getElementById('adminZoneCards').style.display=isAdmin?'block':'none';
