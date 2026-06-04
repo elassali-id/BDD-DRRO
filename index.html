@@ -255,6 +255,27 @@ td, .kpi-val, .kpi-zone-main, input, select {
   h1{font-size:20px !important;}
   h2{{font-size:18px !important;}
   h3{font-size:16px !important;}}
+@media (max-width:768px){
+
+/* HEADER */
+  header{height:auto !important;padding:12px !important;flex-direction:column !important;align-items:flex-start !important;gap:12px !important;}
+  .logo{width:100%;}
+  .logo span:first-child{font-size:16px !important;}
+  .hdr-right{width:100%;display:grid !important;grid-template-columns:1fr 1fr;gap:8px;}
+  .status-dot,
+  .status-txt{display:none;}
+  .zone-badge-hdr{grid-column:1 / -1;text-align:center;justify-self:stretch;}
+  .session-expiry-badge{grid-column:1 / -1;text-align:center;}
+  .theme-toggle,
+  .refresh-btn,
+  .btn-logout{width:100%;min-height:42px;justify-content:center;}}
+@media (max-width:480px){
+  .hdr-right{grid-template-columns:1fr;}
+  .logo{flex-direction:column !important;align-items:flex-start !important;gap:6px !important;}
+  .logo span[style*="height:22px"]{display:none;}
+  .theme-toggle,
+  .refresh-btn,
+  .btn-logout{width:100%;}}
 </style>
 </head>
 <body>
