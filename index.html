@@ -366,7 +366,6 @@ input[type=text]{width:200px}
   .zone-btn-icon{font-size:18px}
   .zone-btn-label{font-size:10px}
 }
-
 @media(max-width:480px){
   .kpi-grid{grid-template-columns:1fr 1fr}
   .kpi-val{font-size:18px}
@@ -375,10 +374,44 @@ input[type=text]{width:200px}
   .zone-badge-hdr{font-size:9px;padding:2px 5px}
   header .logo>span:first-child{font-size:13px !important}
 }
-
 @media(max-width:360px){
   .kpi-grid{grid-template-columns:1fr}
   nav .tab{padding:6px 8px;font-size:9px}
+}
+/* ════════════════════════════════════════════════
+   CONFIGURATION IMPRESSION PDF (CRUCIAL)
+   ════════════════════════════════════════════════ */
+@media print {
+  /* 1. Cacher tout sauf le panel Overview */
+  header, nav, #loginScreen, #loadScreen, .toast, 
+  #panel-tableau, #panel-telechargement, 
+  .tbl-hdr, .pag, .theme-toggle, .btn-logout, .refresh-btn, .sec-title::after {
+    display: none !important;
+  }
+
+  /* 2. Forcer l'affichage du panel Overview */
+  #panel-overview {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 3. Ajuster le layout pour le papier A4 */
+  body { background: white !important; color: black !important; }
+  main { padding: 0 !important; }
+  
+  .kpi-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important; /* Force 4 colonnes sur papier */
+    gap: 10px !important;
+  }
+  
+  .kpi { border: 1px solid #ccc !important; box-shadow: none !important; }
+  .card { border: 1px solid #eee !important; box-shadow: none !important; break-inside: avoid; margin-bottom: 20px !important; }
+  
+  /* Ajuster la taille des graphiques pour qu'ils ne débordent pas */
+  canvas { max-width: 100% !important; height: auto !important; }
 }
 </style>
 </head>
