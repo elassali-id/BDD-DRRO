@@ -756,6 +756,7 @@ async function doLogin(){
   saveSession(currentZone);
   launchApp();
   const s=readSession();if(s)startSessionCountdown(s.expiry);
+  }
 function launchApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appShell').style.display='block';
