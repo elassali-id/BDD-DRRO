@@ -828,11 +828,7 @@ async function loadAdminData(){
   sourceHeaders=hdrUnion;
   setProgress(100,'OK');
   document.getElementById('loadScreen').style.display='none';
-  const z=document.getElementById('alertZone');
-  // if(failed.length===0)z.innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Toutes les zones chargées</strong> — ${fmt(zoneData.length)} articles au total. ${new Date().toLocaleString('fr')}</p></div>`;
-  if(failed.length<3)z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Zones non accessibles : <strong>${failed.join(', ')}</strong>.</p></div>`;
-  else z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Aucun fichier accessible.</strong></p></div>`;
-  if(zoneData.length>0){updateAll();setStatus(`Admin — ${fmt(zoneData.length)} articles (3 zones)`,true);startUpdateWatcher();}
+
 }
 async function fetchBuf(url){const res=await fetch(url,{mode:'cors'});if(!res.ok)throw new Error('HTTP '+res.status);return res.arrayBuffer();}
 function parseXLSX(buf){
