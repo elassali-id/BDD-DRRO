@@ -98,7 +98,7 @@ header{
   position:sticky;top:0;z-index:200;
   box-shadow:var(--shadow-sm);
 }
-.logo{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--tx);display:flex;align-items:center;gap:12px;min-width:0;flex-shrink:1;overflow:hidden}
+.logo{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--tx);display:flex;align-items:center;gap:12px;min-width:0;flex-shrink:1;flex: 0 0 auto !important;overflow:hidden}
 .hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .status-dot{width:7px;height:7px;border-radius:50%;animation:pulse 2s ease infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -482,13 +482,16 @@ input[type=text]{width:200px}
 
 <!-- HEADER sticky -->
 <header>
-  <div class="logo" style="display:flex;align-items:center;gap:12px">
-    <span id="hdrLogoZone" style="font-family:var(--mono);font-size:20px;font-weight:800;letter-spacing:.16em;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap">DRRO</span>
-    <span style="width:1px;height:22px;background:var(--bd2);flex-shrink:0"></span>
-    <span style="display:flex;flex-direction:column;line-height:1.15;min-width:0">
-      <span style="font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--tx);white-space:nowrap">INVENTAIRE 2026</span>
-      <span style="font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:var(--tx3);margin-top:2px;white-space:nowrap">ELASSALI IDRISS</span>
-    </span>
+  <div class="logo" style="display:flex; align-items:center; min-width:300px; gap:15px; flex-shrink:0;">
+    <!-- Texte DRRO avec largeur fixe pour empêcher le chevauchement -->
+    <span style="font-family:var(--mono); font-size:22px; font-weight:800; letter-spacing:.16em; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap; display:inline-block; min-width:85px; flex-shrink:0;">DRRO</span>
+    <!-- Barre de séparation -->
+    <span style="width:1.5px; height:24px; background:var(--bd2); flex-shrink:0; opacity:0.8;"></span>
+    <!-- Titres à droite -->
+    <div style="display:flex; flex-direction:column; line-height:1.2; min-width:150px; flex-shrink:0;">
+      <span style="font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.15em; color:var(--tx); white-space:nowrap;">INVENTAIRE 2026</span>
+      <span style="font-family:var(--mono); font-size:9px; font-weight:500; letter-spacing:.2em; color:var(--tx3); white-space:nowrap;">ELASSALI IDRISS</span>
+    </div>
   </div>
   <div class="hdr-right">
     <span id="hdrZoneBadge" class="zone-badge-hdr"></span>
