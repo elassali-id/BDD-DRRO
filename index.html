@@ -179,116 +179,19 @@ main{  padding: 0;width: 100%;max-width: 100% !important;}
 .obs-disc{background:color-mix(in srgb,var(--red) 16%,var(--s1));color:var(--red);border:1px solid var(--red);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
 .obs-nd{background:var(--s3);color:var(--tx3);border:1px solid var(--bd);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
 
-/* ══ TABLE PANEL — CORRECTIF STICKY ══ */
-/* 1. On force le conteneur principal à coller aux bords */
-main {
-    padding: 0 !important; /* Supprime l'espace entre NAV et FILTRES */
-    width: 100%;
-    max-width: 100% !important;
-}
-
-/* On remet du padding uniquement pour les autres onglets */
-.panel:not(#panel-tableau) {
-    padding: 20px;
-}
-
-#panel-tableau {
-    display: none;
-    flex-direction: column;
-    /* Calcule la hauteur exacte : écran total moins header et nav */
-    height: calc(100vh - var(--header-h) - var(--nav-h));
-    overflow: hidden; 
-    width: 100%;
-}
-
-#panel-tableau.on {
-    display: flex;
-}
-
-/* 2. Barre de filtres : Collée en haut du panel (donc juste sous la nav) */
-.tbl-hdr {
-    background: var(--s1);
-    border-bottom: 1px solid var(--bd);
-    padding: 10px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    position: sticky;
-    top: 0;
-    z-index: 280; /* Doit être au-dessus des en-têtes du tableau */
-    width: 100%;
-    box-shadow: var(--shadow-sm);
-    flex-shrink: 0;
-}
-
-/* 3. Zone de données : Prend tout le reste de la largeur/hauteur */
-.tbl-body-wrap {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: auto; /* Permet le défilement du tableau seul */
-    background: var(--s1);
-    width: 100%;
-}
-
-.tbl-wrap {
-    flex: 1;
-    width: 100%;
-}
-
-table {
-    width: 100%; /* Prend 100% de la largeur du navigateur */
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: auto; /* Ajuste les colonnes au contenu mais sur toute la largeur */
-}
-
-/* 4. En-têtes de colonnes : Sticky au sommet de la zone de scroll */
-thead th {
-    background: var(--thead);
-    padding: 12px 15px;
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--tx3);
-    text-transform: uppercase;
-    border-bottom: 1.5px solid var(--bd);
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-    position: sticky;
-    top: 0; /* Se colle au haut de .tbl-body-wrap */
-    z-index: 150;
-    box-shadow: 0 2px 0 var(--bd);
-}
-
-tbody tr:hover td {
-    background: var(--s3);
-}
-
-td {
-    padding: 10px 15px;
-    color: var(--tx2);
-    border-bottom: 1px solid var(--bd);
-    font-size: 12px;
-    white-space: nowrap; /* Empêche le texte de revenir à la ligne pour un look propre */
-}
-
-/* 5. Pagination : Fixée en bas du tableau */
-.pag {
-    background: var(--s1);
-    border-top: 1px solid var(--bd);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 24px;
-    flex-shrink: 0;
-    z-index: 200;
-}
-
+/* ══ TABLE PANEL ══ */
+main {padding: 0 !important;width: 100%;max-width: 100% !important;}
+.panel:not(#panel-tableau) {padding: 20px;}
+#panel-tableau {display: none;flex-direction: column;height: calc(100vh - var(--header-h) - var(--nav-h));overflow: hidden; width: 100%;}
+#panel-tableau.on {display: flex;}
+.tbl-hdr {background: var(--s1);border-bottom: 1px solid var(--bd);padding: 10px 24px;display: flex;align-items: center;justify-content: space-between;gap: 15px;position: sticky;top: 0;z-index: 280;width: 100%;box-shadow: var(--shadow-sm);flex-shrink: 0;}
+.tbl-body-wrap {flex: 1;min-height: 0;display: flex;flex-direction: column;overflow: auto;background: var(--s1);width: 100%;}
+.tbl-wrap {flex: 1;width: 100%;}
+table {width: 100%;border-collapse: separate;border-spacing: 0;table-layout: auto;}
+thead th {background: var(--thead);padding: 12px 15px;text-align: left;font-family: var(--mono);font-size: 10px;font-weight: 700;color: var(--tx3);text-transform: uppercase;border-bottom: 1.5px solid var(--bd);white-space: nowrap;cursor: pointer;user-select: none;position: sticky;top: 0;z-index: 150;box-shadow: 0 2px 0 var(--bd);}
+tbody tr:hover td {background: var(--s3);}
+td {padding: 10px 15px;color: var(--tx2);border-bottom: 1px solid var(--bd);font-size: 12px;white-space: nowrap;}
+.pag {background: var(--s1);border-top: 1px solid var(--bd);display: flex;align-items: center;justify-content: space-between;padding: 10px 24px;flex-shrink: 0;z-index: 200;}
 input[type=text],select{background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--r);padding:7px 10px;font-family:var(--sans);font-size:12px;color:var(--tx);outline:none;transition:.15s}
 input[type=text]:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(26,54,93,.12)}
 input[type=text]::placeholder{color:var(--tx3)}
@@ -324,23 +227,16 @@ input[type=text]{width:200px}
 .toast.show{opacity:1;transform:translateY(0)}
 
 /* ══ RESPONSIVE MOBILE ══ */
-
 /* btn text short/full toggle */
 .btn-short{display:none}.btn-full{display:inline}
-
-@media(max-width:768px){
-  :root{--header-h:auto;--nav-h:40px;--tblhdr-h:auto}
-
+@media(max-width:768px){:root{--header-h:auto;--nav-h:40px;--tblhdr-h:auto}
+                        
   /* HEADER */
-  header{
-    height:auto;min-height:52px;padding:8px 12px;
-    flex-wrap:wrap;gap:6px;
-    position:sticky;top:0;
-  }
+  header{height:auto;min-height:52px;padding:8px 12px;flex-wrap:wrap;gap:6px;position:sticky;top:0;}
   .logo{flex-shrink:1;min-width:0;overflow:hidden}
   .logo>span:first-child{font-size:15px !important}
   .logo>span[style*="height:22px"]{display:none}
-  .logo>span:last-child span:last-child{display:none} /* hide ELASSALI IDRISS sub */
+  .logo>span:last-child span:last-child{display:none}
   .hdr-right{gap:5px}
   .status-txt{display:none}
   .session-expiry-badge{font-size:9px;padding:2px 6px}
@@ -360,13 +256,8 @@ input[type=text]{width:200px}
   #panel-tableau{height:calc(100vh - 100px);} /* fallback */
 
   /* Filter bar stacks on mobile */
-  .tbl-hdr{
-    position:sticky;top:96px; /* header+nav approx */
-    flex-direction:column;align-items:stretch;padding:8px 10px;gap:6px;
-  }
-  .tbl-controls{
-    display:grid;grid-template-columns:1fr 1fr;gap:6px;justify-content:stretch;width:100%;
-  }
+  .tbl-hdr{position:sticky;top:96px;flex-direction:column;align-items:stretch;padding:8px 10px;gap:6px;}
+  .tbl-controls{display:grid;grid-template-columns:1fr 1fr;gap:6px;justify-content:stretch;width:100%;}
   .tbl-controls input[type=text]{grid-column:1/-1;width:100%}
   .tbl-controls select{width:100%;font-size:11px;padding:6px 8px}
   .tbl-controls .btn{grid-column:1/-1;justify-content:center}
@@ -435,8 +326,7 @@ input[type=text]{width:200px}
 <div id="loadScreen">
   <div>
     <div style="font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:.12em;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap">Autoroutes Du Maroc</div>
-    <div style="font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:.12em;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>
-    <div style="font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:8px">INVENTAIRE 2026</div>
+    <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>    <div style="font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:8px">INVENTAIRE 2026</div>
     <div style="font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.25em;color:var(--tx3);text-align:center;margin-top:6px">ELASSALI IDRISS</div>
     <div class="spinner"></div>
     <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
@@ -450,7 +340,7 @@ input[type=text]{width:200px}
   <div class="login-box">
     <div style="margin-bottom:22px">
       <div style="font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.10em;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap">Autoroutes Du Maroc</div>
-      <div style="font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.06em;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>
+      <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:16px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>
       <div style="font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:4px">INVENTAIRE 2026</div>
       <div style="font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.25em;color:var(--tx3);text-align:center;margin-top:6px">ELASSALI IDRISS</div>
       </div>
@@ -501,7 +391,7 @@ input[type=text]{width:200px}
     <span id="sessionExpiryBadge" class="session-expiry-badge" style="display:none"></span>
     <div class="status-dot" id="statusDot" style="background:var(--tx3);box-shadow:none"></div>
     <span class="status-txt" id="statusTxt">Chargement...</span>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button class="theme-toggle" title="Changer théme" onclick="toggleTheme()" id="themeBtn">🌙</button>
     <button class="refresh-btn" id="refreshBtn" onclick="reloadData()" title="Actualiser les données">
       <span class="btn-full">↺ Actualiser</span><span class="btn-short">↺</span>
     </button>
