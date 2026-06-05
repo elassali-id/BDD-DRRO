@@ -189,7 +189,7 @@ main{padding:16px;width:100%;max-width:100%}
   display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   position:sticky;
   top:calc(var(--header-h) + var(--nav-h));
-  z-index:150;
+  z-index:160;
   box-shadow:var(--shadow-sm);
   flex-shrink:0;
 }
@@ -198,14 +198,10 @@ main{padding:16px;width:100%;max-width:100%}
 
 /* Scrollable data area — wrapper just provides padding, the inner card scrolls */
 .tbl-body-wrap{
-  flex:1;min-height:0;display:flex;
-  padding:12px 16px;overflow:hidden;
+  flex:1;min-height:0;display:flex;padding:0;overflow:hidden;background:var(--s1);
 }
 .tbl-wrap{
-  flex:1;min-height:0;
-  background:var(--s1);border:1.5px solid var(--bd);border-radius:var(--r3);
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  box-shadow:var(--shadow-sm);
+  flex:1;min-height:0;background:var(--s1);border-top:none;border-radius:0;overflow:auto;-webkit-overflow-scrolling:touch;box-shadow:none;
 }
 
 /* Pagination bar — sticky at bottom */
@@ -224,7 +220,17 @@ input[type=text]::placeholder{color:var(--tx3)}
 input[type=text]{width:200px}
 
 table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:auto;min-width:max-content}
-thead th{background:var(--thead);padding:10px;text-align:left;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);border-bottom:1.5px solid var(--bd);white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--bd)}
+thead th{
+  background:var(--thead);
+  padding:10px;text-align:left;
+  font-family:var(--mono);font-size:9px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--tx3);
+  border-bottom:1.5px solid var(--bd);
+  white-space:nowrap;cursor:pointer;user-select:none;
+  position:sticky;top:0;z-index:50;
+  box-shadow:0 2px 0 var(--bd), 0 4px 8px -4px rgba(0,0,0,.08);
+}
 thead th:hover{color:var(--acc)}
 tbody tr{transition:background .1s}
 tbody tr:hover td{background:var(--s3)}
