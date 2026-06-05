@@ -179,10 +179,6 @@ main{  padding: 0;width: 100%;max-width: 100% !important;}
 .obs-nd{background:var(--s3);color:var(--tx3);border:1px solid var(--bd);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
 
 /* ══ TABLE PANEL — CORRECTIF STICKY ══ */
-/* ════════════════════════════════════════════════
-   PANNEAU TABLEAU — PLEIN ÉCRAN ET COLLAGE PARFAIT
-   ════════════════════════════════════════════════ */
-
 /* 1. On force le conteneur principal à coller aux bords */
 main {
     padding: 0 !important; /* Supprime l'espace entre NAV et FILTRES */
@@ -803,7 +799,7 @@ async function loadSingleZone(zone){
     lastCounts[zone]=rows.length;
     setProgress(100,'OK');
     document.getElementById('loadScreen').style.display='none';
-    // document.getElementById('alertZone').innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Zone ${zone} chargée</strong> — ${fmt(rows.length)} articles. ${new Date().toLocaleString('fr')}</p></div>`;
+    document.getElementById('alertZone').innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Zone ${zone} chargée</strong> — ${fmt(rows.length)} articles. ${new Date().toLocaleString('fr')}</p></div>`;
     updateAll();setStatus(`${zone} — ${fmt(rows.length)} articles`,true);startUpdateWatcher();
   }catch(e){
     document.getElementById('loadScreen').style.display='none';
@@ -828,7 +824,11 @@ async function loadAdminData(){
   sourceHeaders=hdrUnion;
   setProgress(100,'OK');
   document.getElementById('loadScreen').style.display='none';
-
+  const z=document.getElementById('alertZone');
+  if(failed.length===0)z.innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Toutes les zones chargées</strong> — ${fmt(zoneData.length)} articles au total. ${new Date().toLocaleString('fr')}</p></div>`;
+  else if(failed.length<3)z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Zones non accessibles : <strong>${failed.join(', ')}</strong>.</p></div>`;
+  else z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Aucun fichier accessible.</strong></p></div>`;
+  if(zoneData.length>0){updateAll();setStatus(`Admin — ${fmt(zoneData.length)} articles (3 zones)`,true);startUpdateWatcher();}
 }
 async function fetchBuf(url){const res=await fetch(url,{mode:'cors'});if(!res.ok)throw new Error('HTTP '+res.status);return res.arrayBuffer();}
 function parseXLSX(buf){
