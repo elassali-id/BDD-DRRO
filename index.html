@@ -326,7 +326,8 @@ input[type=text]{width:200px}
 <div id="loadScreen">
   <div>
     <div style="font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:.12em;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap">Autoroutes Du Maroc</div>
-    <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>    <div style="font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:8px">INVENTAIRE 2026</div>
+    <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.5;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطـــرق الـسـيـــارة بالمـغـــرب</div>    
+    <div style="font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:8px">INVENTAIRE 2026</div>
     <div style="font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.25em;color:var(--tx3);text-align:center;margin-top:6px">ELASSALI IDRISS</div>
     <div class="spinner"></div>
     <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
@@ -340,7 +341,7 @@ input[type=text]{width:200px}
   <div class="login-box">
     <div style="margin-bottom:22px">
       <div style="font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.10em;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap">Autoroutes Du Maroc</div>
-      <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:16px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطرق السيارة بالمغرب</div>
+      <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:16px;font-weight:700;letter-spacing:0;text-align:center;line-height:1.6;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;direction:rtl">الطـــرق الـسـيـــارة بالمـغـــرب</div>
       <div style="font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.32em;color:var(--tx);text-align:center;margin-top:4px">INVENTAIRE 2026</div>
       <div style="font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.25em;color:var(--tx3);text-align:center;margin-top:6px">ELASSALI IDRISS</div>
       </div>
@@ -550,6 +551,7 @@ function readSession(){
   try{const raw=localStorage.getItem(SESSION_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s||!s.zone||!s.expiry||Date.now()>s.expiry){clearSession();return null;}return s;}catch(e){return null;}
 }
 function startSessionCountdown(expiry){
+  if(isAdmin){document.getElementById('sessionExpiryBadge').style.display='none';return;}
   if(sessionExpiryInterval)clearInterval(sessionExpiryInterval);
   const badge=document.getElementById('sessionExpiryBadge');
   const tick=()=>{
@@ -579,7 +581,6 @@ function cssVar(n){return getComputedStyle(document.documentElement).getProperty
 async function sha256Hex(str){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');}
 
 function syncStickyHeights(){
-  // Double rAF : garantit que le navigateur a peint avant de lire les dimensions
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       const hdr=document.querySelector('header');
@@ -587,7 +588,7 @@ function syncStickyHeights(){
       if(!hdr||!nav)return;
       const hh=hdr.getBoundingClientRect().height;
       const nh=nav.getBoundingClientRect().height;
-      if(!hh||!nh)return; // sécurité : ne pas écrire 0px
+      if(!hh||!nh)return;
       document.documentElement.style.setProperty('--header-h',hh+'px');
       document.documentElement.style.setProperty('--nav-h',nh+'px');
       const pt=document.getElementById('panel-tableau');
@@ -749,7 +750,7 @@ async function loadAdminData(){
   if(failed.length===0)z.innerHTML=`<div class="alert ok"><div class="alert-icon">✓</div><p><strong>Toutes les zones chargées</strong> — ${fmt(zoneData.length)} articles au total. ${new Date().toLocaleString('fr')}</p></div>`;
   else if(failed.length<3)z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Chargement partiel</strong> — Zones non accessibles : <strong>${failed.join(', ')}</strong>.</p></div>`;
   else z.innerHTML=`<div class="alert"><div class="alert-icon">⚠</div><p><strong>Aucun fichier accessible.</strong></p></div>`;
-  if(zoneData.length>0){updateAll();setStatus(`Admin — ${fmt(zoneData.length)} articles (3 zones)`,true);startUpdateWatcher();}
+  if(zoneData.length>0){updateAll();setStatus(`Admin — ${fmt(zoneData.length)} articles`,true);startUpdateWatcher();}
 }
 async function fetchBuf(url){const res=await fetch(url,{mode:'cors'});if(!res.ok)throw new Error('HTTP '+res.status);return res.arrayBuffer();}
 function parseXLSX(buf){
@@ -1022,8 +1023,6 @@ window.addEventListener('load',()=>{
     }
   },700);
 });
-
-// Re-sync on resize (orientation change on mobile)
 window.addEventListener('resize',()=>{syncStickyHeights();});
 </script>
 </body>
