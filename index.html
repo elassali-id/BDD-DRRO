@@ -124,7 +124,8 @@ nav{
 .tab.on{color:#fff;background:var(--grad)}
 
 /* ══ MAIN & PANELS ══ */
-main{padding:16px;width:100%;max-width:100%}
+main{  padding: 0;width: 100%;max-width: 100% !important;}
+.panel:not(#panel-tableau) {padding: 20px;}
 .panel{display:none}.panel.on{display:block;animation:fade .3s ease}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .sec-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -178,18 +179,14 @@ main{padding:16px;width:100%;max-width:100%}
 .obs-nd{background:var(--s3);color:var(--tx3);border:1px solid var(--bd);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
 
 /* ══ TABLE PANEL — CORRECTIF STICKY ══ */
-#panel-tableau{display:none;flex-direction:column;height:calc(100vh - var(--header-h) - var(--nav-h));overflow:hidden;padding:0}
+#panel-tableau{display:none;flex-direction:column;height:calc(100vh - var(--header-h) - var(--nav-h));overflow:hidden;padding:0;width: 100%;}
 #panel-tableau.on{display:flex}
 
 .tbl-hdr{
   background:var(--s1);
   border-bottom:1.5px solid var(--bd);
-  padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  /* Sticky relative au panneau tableau */
-  position:sticky;
-  top:0;
-  z-index:180;
+  padding: 10px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:180;width:100%;
   box-shadow:var(--shadow-sm);
   flex-shrink:0;
 }
@@ -1015,17 +1012,24 @@ function exportData(data,name){
 }
 
 // ═══════════ TABS ═══════════
-function showTab(id){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.panel').forEach(p=>{p.classList.remove('on');});
-  const panel=document.getElementById('panel-'+id);
-  if(panel){
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  
+  const panel = document.getElementById('panel-' + id);
+  if (panel) {
     panel.classList.add('on');
-    // On appelle syncStickyHeights au changement d'onglet
-    setTimeout(syncStickyHeights, 50);
-    if(id==='tableau') applyFilters();
+    
+    // Ajoutez ceci pour forcer le collage immédiat
+    setTimeout(() => {
+      syncStickyHeights();
+      if (id === 'tableau') window.dispatchEvent(new Event('resize'));
+    }, 50);
   }
-  document.querySelectorAll('#mainNav .tab').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))t.classList.add('on');});
+  
+  // Activer le bouton de l'onglet
+  const activeTab = Array.from(document.querySelectorAll('.tab')).find(t => t.innerText.toLowerCase().includes(id.replace('panel-','')));
+  if(activeTab) activeTab.classList.add('on');
 }
 
 // ═══════════ TOAST ═══════════
