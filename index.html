@@ -732,30 +732,38 @@ function launchApp(){
   reloadData();
 }
 function setupHeader(){
-  const cfg = ZONE_CONFIG[currentZone] || {};
   const badge = document.getElementById('hdrZoneBadge');
   const logo = document.getElementById('hdrLogoZone');
+  const ovLabel = document.getElementById('ovZoneLabel');
+  const cfg = ZONE_CONFIG[currentZone] || {};
+
+  // FIX : On ne touche JAMAIS au texte du logo hdrLogoZone. 
+  // Il doit rester "DRRO" pour garder la structure stable.
   if(logo) logo.textContent = 'DRRO'; 
-  if(isAdmin){
-    if(badge) {
+
+  // On met à jour uniquement le badge à droite
+  if(badge){
+    if(isAdmin){
       badge.textContent = 'ADMIN';
       badge.className = 'zone-badge-hdr admin-badge';
-    }
-  } else {
-    if(badge) {
+    } else {
       badge.textContent = currentZone;
       badge.className = 'zone-badge-hdr ' + (cfg.badgeClass || '');
     }
   }
-  // Mise à jour des labels de la page
-  set('ovZoneLabel', isAdmin ? 'Toutes zones' : currentZone);
-  // Gestion de l'affichage des sections Admin
+
+  // Mise à jour du titre dans la page
+  if(ovLabel) ovLabel.textContent = isAdmin ? 'Toutes zones' : currentZone;
+
+  // Masquer les filtres/cartes admin pour les utilisateurs simples
+  const fSrc = document.getElementById('fSrc');
+  if(fSrc) fSrc.style.display = isAdmin ? '' : 'none';
+  
   const adminCards = document.getElementById('adminZoneCards');
-  const adminCharts = document.getElementById('adminChartSection');
-  const srcFilter = document.getElementById('fSrc');
   if(adminCards) adminCards.style.display = isAdmin ? 'block' : 'none';
+  
+  const adminCharts = document.getElementById('adminChartSection');
   if(adminCharts) adminCharts.style.display = isAdmin ? 'block' : 'none';
-  if(srcFilter) srcFilter.style.display = isAdmin ? '' : 'none';
 }
 function doLogout(){
   clearSession();
