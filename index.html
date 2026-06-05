@@ -378,35 +378,10 @@ input[type=text]{width:200px}
   .kpi-grid{grid-template-columns:1fr}
   nav .tab{padding:6px 8px;font-size:9px}
 }
-/* ════════════════════════════════════════════════
-   CONFIGURATION IMPRESSION PDF (CRUCIAL)
-   ════════════════════════════════════════════════ */
-@media print {
-  /* 1. Afficher le titre du rapport et forcer la vue d'ensemble */
-  #printHeader { display: block !important; }
-  #panel-overview { display: block !important; visibility: visible !important; }
-  /* 2. Cacher absolument tout le reste */
-  header, nav, #loginScreen, #loadScreen, #panel-tableau, #panel-telechargement, 
-  .tbl-hdr, .pag, .theme-toggle, .btn-logout, .refresh-btn, .toast, .sec-title::after {display: none !important;}
-  /* 3. Ajuster la mise en page A4 */
-  @page { size: A4; margin: 1.5cm; }
-  body { background: white !important; color: black !important; }
-  main { padding: 0 !important; }
-  /* 4. EMPÊCHER LES COUPURES (Éviter qu'une carte soit coupée en deux) */
-  .kpi, .kpi-zone-card, .card {break-inside: avoid !important;page-break-inside: avoid !important;border: 1px solid #E2E8F0 !important;margin-bottom: 20px !important;box-shadow: none !important;}
-  /* 5. Forcer les colonnes propres pour les indicateurs */
-  .kpi-grid {display: grid !important;grid-template-columns: repeat(4, 1fr) !important;gap: 10px !important;}
-  .charts-grid {display: grid !important;grid-template-columns: 1fr 1fr !important;gap: 20px !important;}
-  .wide { grid-column: span 2 !important; }
-}
 </style>
 </head>
 <body>
-<!-- Titre PDF -->
-<div id="printHeader" style="display:none;">
-    <h1 style="text-align:center; font-size:22px; color:#1A365D; margin-bottom:10px;">RAPPORT D'INVENTAIRE DRRO 2026</h1>
-    <p style="text-align:center; font-family:monospace; font-size:12px; margin-bottom:30px;">Document généré le : <span id="printDate"></span></p>
-</div>
+
 <!-- LOADING -->
 <div id="loadScreen">
   <div>
@@ -572,15 +547,6 @@ input[type=text]{width:200px}
 
 <!-- ── TELECHARGEMENT ── -->
 <div class="panel" id="panel-telechargement">
-  <div class="sec-title">Rapports & Documents</div>
-  <div class="card" style="display:flex; align-items:center; gap:20px; margin-bottom:24px">
-    <div style="font-size:32px">📄</div>
-    <div style="flex:1">
-      <div style="font-weight:700">Rapport d'inventaire consolidé (PDF)</div>
-      <div style="font-size:11px; color:var(--tx3)">Génère un document imprimable des statistiques et graphiques actuels.</div>
-    </div>
-    <button class="btn btn-acc" onclick="window.print()">🖨️ Générer PDF</button>
-  </div>
   <div class="sec-title">Fichiers source — Inventaires zones</div>
   <div class="dl-grid" id="dlGrid"></div>
   <div id="bddDlSection" style="display:none">
@@ -756,16 +722,6 @@ function buildNav(){
     <button class="tab" onclick="showTab('tableau')">Données</button>
     <button class="tab" onclick="showTab('telechargement')">Téléchargement</button>`;
   setTimeout(syncStickyHeights,20);
-}
-
-// ═══════════ REPORT ═══════════  
-function printReport() {
-    // 1. Insérer la date actuelle
-    const dateElt = document.getElementById('printDate');
-    if(dateElt) dateElt.textContent = new Date().toLocaleString('fr-FR');
-    
-    // 2. Lancer l'impression (le CSS s'occupe de ne garder que la Vue d'ensemble)
-    window.print();
 }
   
 // ═══════════ LOAD DATA ═══════════
