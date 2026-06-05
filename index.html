@@ -732,20 +732,30 @@ function launchApp(){
   reloadData();
 }
 function setupHeader(){
-  const cfg=ZONE_CONFIG[currentZone]||{};
-  const badge=document.getElementById('hdrZoneBadge');
-  const logo=document.getElementById('hdrLogoZone');
+  const cfg = ZONE_CONFIG[currentZone] || {};
+  const badge = document.getElementById('hdrZoneBadge');
+  const logo = document.getElementById('hdrLogoZone');
+  if(logo) logo.textContent = 'DRRO'; 
   if(isAdmin){
-    if(badge){badge.textContent='ADMIN';badge.className='zone-badge-hdr admin-badge';}
-    if(logo)logo.textContent='DRRO';
-  }else{
-    if(badge){badge.textContent=currentZone;badge.className='zone-badge-hdr '+(cfg.badgeClass||'');}
-    if(logo)logo.textContent=currentZone;
+    if(badge) {
+      badge.textContent = 'ADMIN';
+      badge.className = 'zone-badge-hdr admin-badge';
+    }
+  } else {
+    if(badge) {
+      badge.textContent = currentZone;
+      badge.className = 'zone-badge-hdr ' + (cfg.badgeClass || '');
+    }
   }
-  set('ovZoneLabel',isAdmin?'Toutes zones':currentZone);
-  document.getElementById('adminZoneCards').style.display=isAdmin?'block':'none';
-  document.getElementById('adminChartSection').style.display=isAdmin?'block':'none';
-  document.getElementById('fSrc').style.display=isAdmin?'':'none';
+  // Mise à jour des labels de la page
+  set('ovZoneLabel', isAdmin ? 'Toutes zones' : currentZone);
+  // Gestion de l'affichage des sections Admin
+  const adminCards = document.getElementById('adminZoneCards');
+  const adminCharts = document.getElementById('adminChartSection');
+  const srcFilter = document.getElementById('fSrc');
+  if(adminCards) adminCards.style.display = isAdmin ? 'block' : 'none';
+  if(adminCharts) adminCharts.style.display = isAdmin ? 'block' : 'none';
+  if(srcFilter) srcFilter.style.display = isAdmin ? '' : 'none';
 }
 function doLogout(){
   clearSession();
