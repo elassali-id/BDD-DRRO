@@ -382,41 +382,31 @@ input[type=text]{width:200px}
    CONFIGURATION IMPRESSION PDF (CRUCIAL)
    ════════════════════════════════════════════════ */
 @media print {
-  /* 1. Cacher tout sauf le panel Overview */
-  header, nav, #loginScreen, #loadScreen, .toast, 
-  #panel-tableau, #panel-telechargement, 
-  .tbl-hdr, .pag, .theme-toggle, .btn-logout, .refresh-btn, .sec-title::after {
-    display: none !important;
-  }
-
-  /* 2. Forcer l'affichage du panel Overview */
-  #panel-overview {
-    display: block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-  }
-
-  /* 3. Ajuster le layout pour le papier A4 */
+  /* 1. Afficher le titre du rapport et forcer la vue d'ensemble */
+  #printHeader { display: block !important; }
+  #panel-overview { display: block !important; visibility: visible !important; }
+  /* 2. Cacher absolument tout le reste */
+  header, nav, #loginScreen, #loadScreen, #panel-tableau, #panel-telechargement, 
+  .tbl-hdr, .pag, .theme-toggle, .btn-logout, .refresh-btn, .toast, .sec-title::after {display: none !important;}
+  /* 3. Ajuster la mise en page A4 */
+  @page { size: A4; margin: 1.5cm; }
   body { background: white !important; color: black !important; }
   main { padding: 0 !important; }
-  
-  .kpi-grid {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important; /* Force 4 colonnes sur papier */
-    gap: 10px !important;
-  }
-  
-  .kpi { border: 1px solid #ccc !important; box-shadow: none !important; }
-  .card { border: 1px solid #eee !important; box-shadow: none !important; break-inside: avoid; margin-bottom: 20px !important; }
-  
-  /* Ajuster la taille des graphiques pour qu'ils ne débordent pas */
-  canvas { max-width: 100% !important; height: auto !important; }
+  /* 4. EMPÊCHER LES COUPURES (Éviter qu'une carte soit coupée en deux) */
+  .kpi, .kpi-zone-card, .card {break-inside: avoid !important;page-break-inside: avoid !important;border: 1px solid #E2E8F0 !important;margin-bottom: 20px !important;box-shadow: none !important;}
+  /* 5. Forcer les colonnes propres pour les indicateurs */
+  .kpi-grid {display: grid !important;grid-template-columns: repeat(4, 1fr) !important;gap: 10px !important;}
+  .charts-grid {display: grid !important;grid-template-columns: 1fr 1fr !important;gap: 20px !important;}
+  .wide { grid-column: span 2 !important; }
 }
 </style>
 </head>
 <body>
-
+<!-- Titre PDF -->
+<div id="printHeader" style="display:none;">
+    <h1 style="text-align:center; font-size:22px; color:#1A365D; margin-bottom:10px;">RAPPORT D'INVENTAIRE DRRO 2026</h1>
+    <p style="text-align:center; font-family:monospace; font-size:12px; margin-bottom:30px;">Document généré le : <span id="printDate"></span></p>
+</div>
 <!-- LOADING -->
 <div id="loadScreen">
   <div>
@@ -768,6 +758,16 @@ function buildNav(){
   setTimeout(syncStickyHeights,20);
 }
 
+// ═══════════ REPORT ═══════════  
+function printReport() {
+    // 1. Insérer la date actuelle
+    const dateElt = document.getElementById('printDate');
+    if(dateElt) dateElt.textContent = new Date().toLocaleString('fr-FR');
+    
+    // 2. Lancer l'impression (le CSS s'occupe de ne garder que la Vue d'ensemble)
+    window.print();
+}
+  
 // ═══════════ LOAD DATA ═══════════
 async function reloadData(){
   if(!currentZone||isLoading)return;
