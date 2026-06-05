@@ -179,62 +179,117 @@ main{  padding: 0;width: 100%;max-width: 100% !important;}
 .obs-nd{background:var(--s3);color:var(--tx3);border:1px solid var(--bd);font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px}
 
 /* ══ TABLE PANEL — CORRECTIF STICKY ══ */
-#panel-tableau{display:none;flex-direction:column;height:calc(100vh - var(--header-h) - var(--nav-h));overflow:hidden;padding:0;width: 100%;}
-#panel-tableau.on{display:flex}
+/* ════════════════════════════════════════════════
+   PANNEAU TABLEAU — PLEIN ÉCRAN ET COLLAGE PARFAIT
+   ════════════════════════════════════════════════ */
 
-.tbl-hdr{
-  background:var(--s1);
-  border-bottom:1.5px solid var(--bd);
-  padding: 10px 24px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:180;width:100%;
-  box-shadow:var(--shadow-sm);
-  flex-shrink:0;
-}
-.tbl-count{font-family:var(--mono);font-size:11px;color:var(--tx3);white-space:nowrap}
-.tbl-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex:1;justify-content:flex-end}
-
-/* Container de données scrollable */
-.tbl-body-wrap{
-  flex:1;min-height:0;display:flex;padding:0;overflow:auto;background:var(--s1);
-}
-.tbl-wrap{
-  flex:1;min-height:0;background:var(--s1);border-top:none;border-radius:0;box-shadow:none;
+/* 1. On force le conteneur principal à coller aux bords */
+main {
+    padding: 0 !important; /* Supprime l'espace entre NAV et FILTRES */
+    width: 100%;
+    max-width: 100% !important;
 }
 
-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:auto;min-width:max-content}
-
-thead th{
-  background:var(--thead);
-  padding:10px;text-align:left;
-  font-family:var(--mono);font-size:9px;font-weight:600;
-  letter-spacing:.08em;text-transform:uppercase;
-  color:var(--tx3);
-  border-bottom:1.5px solid var(--bd);
-  white-space:nowrap;cursor:pointer;user-select:none;
-  /* Sticky relative au container tbl-body-wrap */
-  position:sticky;
-  top:0;
-  z-index:150;
-  box-shadow:0 2px 0 var(--bd);
+/* On remet du padding uniquement pour les autres onglets */
+.panel:not(#panel-tableau) {
+    padding: 20px;
 }
-thead th:hover{color:var(--acc)}
-tbody tr{transition:background .1s}
-tbody tr:hover td{background:var(--s3)}
-td{padding:7px 10px;color:var(--tx2);vertical-align:top;line-height:1.4;font-size:11px;border-bottom:1px solid var(--bd)}
-tbody tr:last-child td{border-bottom:none}
-td.mono{font-family:var(--mono);font-size:10px;color:var(--acc);white-space:nowrap}
-td.wrap{max-width:260px;word-break:break-word}
-td.short{white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
-td,.kpi-val,.kpi-zone-main,input,select{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1}
 
-/* Pagination bar — sticky at bottom */
-.pag{
-  background:var(--s1);
-  border-top:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 16px;
-  flex-shrink:0;
-  flex-wrap:wrap;gap:8px;
+#panel-tableau {
+    display: none;
+    flex-direction: column;
+    /* Calcule la hauteur exacte : écran total moins header et nav */
+    height: calc(100vh - var(--header-h) - var(--nav-h));
+    overflow: hidden; 
+    width: 100%;
+}
+
+#panel-tableau.on {
+    display: flex;
+}
+
+/* 2. Barre de filtres : Collée en haut du panel (donc juste sous la nav) */
+.tbl-hdr {
+    background: var(--s1);
+    border-bottom: 1px solid var(--bd);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 280; /* Doit être au-dessus des en-têtes du tableau */
+    width: 100%;
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+/* 3. Zone de données : Prend tout le reste de la largeur/hauteur */
+.tbl-body-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto; /* Permet le défilement du tableau seul */
+    background: var(--s1);
+    width: 100%;
+}
+
+.tbl-wrap {
+    flex: 1;
+    width: 100%;
+}
+
+table {
+    width: 100%; /* Prend 100% de la largeur du navigateur */
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: auto; /* Ajuste les colonnes au contenu mais sur toute la largeur */
+}
+
+/* 4. En-têtes de colonnes : Sticky au sommet de la zone de scroll */
+thead th {
+    background: var(--thead);
+    padding: 12px 15px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--tx3);
+    text-transform: uppercase;
+    border-bottom: 1.5px solid var(--bd);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0; /* Se colle au haut de .tbl-body-wrap */
+    z-index: 150;
+    box-shadow: 0 2px 0 var(--bd);
+}
+
+tbody tr:hover td {
+    background: var(--s3);
+}
+
+td {
+    padding: 10px 15px;
+    color: var(--tx2);
+    border-bottom: 1px solid var(--bd);
+    font-size: 12px;
+    white-space: nowrap; /* Empêche le texte de revenir à la ligne pour un look propre */
+}
+
+/* 5. Pagination : Fixée en bas du tableau */
+.pag {
+    background: var(--s1);
+    border-top: 1px solid var(--bd);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    flex-shrink: 0;
+    z-index: 200;
 }
 
 input[type=text],select{background:var(--s2);border:1.5px solid var(--bd);border-radius:var(--r);padding:7px 10px;font-family:var(--sans);font-size:12px;color:var(--tx);outline:none;transition:.15s}
@@ -1012,24 +1067,22 @@ function exportData(data,name){
 }
 
 // ═══════════ TABS ═══════════
-function showTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+function showTab(id){
+  // 1. Désactiver tous les onglets et panels
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   
-  const panel = document.getElementById('panel-' + id);
-  if (panel) {
-    panel.classList.add('on');
-    
-    // Ajoutez ceci pour forcer le collage immédiat
-    setTimeout(() => {
-      syncStickyHeights();
-      if (id === 'tableau') window.dispatchEvent(new Event('resize'));
-    }, 50);
-  }
-  
-  // Activer le bouton de l'onglet
-  const activeTab = Array.from(document.querySelectorAll('.tab')).find(t => t.innerText.toLowerCase().includes(id.replace('panel-','')));
-  if(activeTab) activeTab.classList.add('on');
+  // 2. Activer le panel actuel
+  const panel = document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('on');
+
+  // 3. Correction du surlignage du bouton (Mapping manuel pour éviter l'erreur de texte)
+  const tabMap = { 'overview': 0, 'tableau': 1, 'telechargement': 2 };
+  const tabs = document.querySelectorAll('.tab');
+  if(tabs[tabMap[id]]) tabs[tabMap[id]].classList.add('on');
+
+  // 4. Recalculer les hauteurs pour le sticky
+  setTimeout(syncStickyHeights, 50);
 }
 
 // ═══════════ TOAST ═══════════
