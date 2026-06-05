@@ -482,12 +482,39 @@ input[type=text]{width:200px}
 
 <!-- HEADER sticky -->
 <header>
-  <div class="logo" style="display:flex; align-items:center; min-width:300px; gap:15px; flex-shrink:0;">
+  <div class="logo" style="display:flex; align-items:center; min-width:300px; gap:15px; flex-shrink:0; overflow:hidden;">
     <!-- Texte DRRO avec largeur fixe pour empêcher le chevauchement -->
-    <span style="font-family:var(--mono); font-size:22px; font-weight:800; letter-spacing:.16em; background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; white-space:nowrap; display:inline-block; min-width:85px; flex-shrink:0;">DRRO</span>
-    <!-- Barre de séparation -->
-    <span style="width:1.5px; height:24px; background:var(--bd2); flex-shrink:0; opacity:0.8;"></span>
-    <!-- Titres à droite -->
+  <span style="
+font-family:var(--mono);
+font-size:22px;
+font-weight:800;
+letter-spacing:.16em;
+background:var(--grad);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+white-space:nowrap;
+display:block;
+width:85px;
+min-width:85px;
+max-width:85px;
+flex:0 0 85px;
+overflow:hidden;
+">
+DRRO
+</span>
+
+<!-- Barre de séparation -->
+<span style="
+width:1.5px;
+min-width:1.5px;
+max-width:1.5px;
+height:24px;
+background:var(--bd2);
+flex:0 0 1.5px;
+opacity:0.8;
+"></span>
+<!-- Titres à droite -->
     <div style="display:flex; flex-direction:column; line-height:1.2; min-width:150px; flex-shrink:0;">
       <span style="font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.15em; color:var(--tx); white-space:nowrap;">INVENTAIRE 2026</span>
       <span style="font-family:var(--mono); font-size:9px; font-weight:500; letter-spacing:.2em; color:var(--tx3); white-space:nowrap;">ELASSALI IDRISS</span>
