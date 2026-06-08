@@ -1250,10 +1250,6 @@ input[type=text] {
   display: inline-block;
 }
 
-/* ============================================ */
-/* STYLES MODAL CORRIGÉS - Structure propre     */
-/* ============================================ */
-
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1317,14 +1313,12 @@ input[type=text] {
   padding: 24px;
 }
 
-/* Grille 2 colonnes pour la modale */
 .modal-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px 24px;
 }
 
-/* Style pour chaque champ avec conteneur rectangulaire */
 .modal-field {
   display: flex;
   flex-direction: column;
@@ -1380,7 +1374,6 @@ input[type=text] {
   box-shadow: 0 0 0 3px rgba(26,54,93,.12);
 }
 
-/* Champ non modifiable (lecture seule) - UN SEUL CADENAS */
 .modal-field input.readonly-field {
   background: var(--s3);
   color: var(--tx3);
@@ -1389,13 +1382,11 @@ input[type=text] {
   font-style: italic;
 }
 
-/* Cadenas unique dans le label */
 .modal-field label .lock-icon {
   font-size: 10px;
   opacity: 0.6;
 }
 
-/* Style spécifique pour les boutons */
 .modal-buttons .btn,
 .modal-buttons-right .btn {
   cursor: pointer;
@@ -1433,7 +1424,6 @@ input[type=text] {
   gap: 12px;
 }
 
-/* Responsive modal */
 @media (max-width: 700px) {
   .modal-form-grid {
     grid-template-columns: 1fr;
@@ -1463,10 +1453,6 @@ input[type=text] {
     text-align: center;
   }
 }
-
-/* ============================================ */
-/* FIN STYLES MODAL CORRIGÉS                    */
-/* ============================================ */
 
 .confirm-overlay {
   position: fixed;
@@ -1921,19 +1907,7 @@ input[type=text] {
   <div class="sec-title">Fichiers source — Inventaires zones</div>
   <div class="dl-grid" id="dlGrid"></div>
   <div id="bddDlSection" style="display:none">
-    <div class="sec-title" style="margin-top:24px">Base de données consolidée</div>
-    <div class="dl-grid">
-      <div class="dl-card">
-        <div class="dl-icon" style="background:color-mix(in srgb,var(--acc3) 14%,var(--s1))">📥</div>
-        <div class="dl-info"><div class="dl-name">BDD-DRRO.xlsx</div><div class="dl-meta">Base consolidée · Toutes zones</div></div>
-        <div class="dl-btns"><a class="btn btn-grn" href="https://docs.google.com/spreadsheets/d/1VQVo9ZCkXyFIo5nwdfFzqnW9kub3dHxm/export?format=xlsx" target="_blank" rel="noopener">↓ Télécharger</a></div>
-      </div>
-      <div class="dl-card">
-        <div class="dl-icon" style="background:color-mix(in srgb,var(--gold) 14%,var(--s1))">🔗</div>
-        <div class="dl-info"><div class="dl-name">BDD-DRRO dans Drive</div><div class="dl-meta">Visualiser dans Google Sheets</div></div>
-        <div class="dl-btns"><a class="btn btn-gold" href="https://docs.google.com/spreadsheets/d/1VQVo9ZCkXyFIo5nwdfFzqnW9kub3dHxm/edit" target="_blank" rel="noopener">↗ Ouvrir</a></div>
-      </div>
-    </div>
+    <!-- Sera rempli dynamiquement -->
   </div>
   <div class="sec-title" style="margin-top:24px">Exporter les données filtrées</div>
   <div class="card">
@@ -2088,7 +2062,136 @@ function toast(msg, type = '') {
 }
 
 // ============================================================
-// SESSION
+// NOUVELLE FONCTION : GÉNÉRATION BDD-DRRO À PARTIR DES 3 ZONES
+// ============================================================
+
+async function generateBDD_DRRO() {
+  if (!isAdmin) {
+    toast('Accès réservé à l\'administrateur', 'err');
+    return;
+  }
+  
+  if (zoneData.length === 0) {
+    toast('Aucune donnée disponible. Veuillez d\'abord charger les zones.', 'err');
+    return;
+  }
+  
+  toast('⏳ Génération de BDD-DRRO.xlsx en cours...', 'info');
+  
+  try {
+    // Récupérer les données par zone
+    const zones = ['CEBS', 'CEJ', 'AEBB'];
+    const zonesData = {};
+    let allHeaders = new Set();
+    
+    for (const zone of zones) {
+      const zoneRows = zoneData.filter(r => r.Source === zone);
+      zonesData[zone] = zoneRows;
+      
+      // Collecter tous les en-têtes uniques
+      zoneRows.forEach(row => {
+        Object.keys(row).forEach(key => {
+          if (key !== 'Source') {
+            allHeaders.add(key);
+          }
+        });
+      });
+    }
+    
+    // Définir l'ordre des colonnes souhaité
+    const orderedHeaders = [
+      'ID_Immobilisation', 'ID_Imobilisation', 'ID Immobilisation',
+      'Lib_Article', 'Libellé article', 'LIB_ARTICLE',
+      'NumSerie', 'Numerie', 'NUMERIE', 'COM-ALU',
+      'Lib_Modele', 'Modele', 'Modèle', 'LIB_MODELE',
+      'Lib_Marque', 'Marque', 'LIB_MARQUE',
+      'Localisation', 'LOCALISATION', 'Emplacement',
+      'Gare', 'GARE',
+      'Date MAJ', 'Date_inventaire', 'Date d\'inventaire', 'DATE_INVENTAIRE',
+      'Inventoriste', 'INVENTORISTE',
+      'Observation', 'OBSERVATION',
+      'Cod_Article', 'Code article', 'COD_ARTICLE',
+      'Marche', 'N° Marché', 'N_MARCHE',
+      'PU', 'Prix',
+      'Date_modification', 'Date de modification', 'DATE_MODIFICATION'
+    ];
+    
+    // Construire la liste finale des colonnes
+    const finalHeaders = [];
+    for (const h of orderedHeaders) {
+      if (allHeaders.has(h) && !finalHeaders.includes(h)) {
+        finalHeaders.push(h);
+      }
+    }
+    // Ajouter les colonnes restantes
+    allHeaders.forEach(h => {
+      if (!finalHeaders.includes(h) && h !== 'Source') {
+        finalHeaders.push(h);
+      }
+    });
+    
+    // Créer un nouveau classeur
+    const wb = XLSX.utils.book_new();
+    
+    // Pour chaque zone, créer une feuille
+    for (const zone of zones) {
+      const data = zonesData[zone];
+      
+      // Transformer les données pour la feuille
+      const sheetData = data.map(row => {
+        const newRow = {};
+        finalHeaders.forEach(header => {
+          let value = row[header];
+          if (value === undefined || value === null) {
+            // Chercher des variantes
+            const lowerHeader = header.toLowerCase();
+            for (const [key, val] of Object.entries(row)) {
+              if (key.toLowerCase() === lowerHeader || key === header) {
+                value = val;
+                break;
+              }
+            }
+          }
+          newRow[header] = (value === undefined || value === null) ? '' : value;
+        });
+        return newRow;
+      });
+      
+      // Créer la feuille
+      const ws = sheetData.length > 0 
+        ? XLSX.utils.json_to_sheet(sheetData, { header: finalHeaders })
+        : XLSX.utils.json_to_sheet([], { header: finalHeaders });
+      
+      // Ajuster les largeurs de colonnes
+      ws['!cols'] = finalHeaders.map(header => {
+        let maxLen = header.length;
+        sheetData.slice(0, 100).forEach(row => {
+          const val = row[header] ? row[header].toString() : '';
+          if (val.length > maxLen) maxLen = Math.min(val.length, 50);
+        });
+        return { wch: Math.min(35, Math.max(12, maxLen + 2)) };
+      });
+      
+      XLSX.utils.book_append_sheet(wb, ws, `${zone}_ALL`);
+    }
+    
+    // Exporter le fichier
+    const dateStr = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    XLSX.writeFile(wb, `BDD-DRRO_${dateStr}.xlsx`);
+    toast('✓ BDD-DRRO.xlsx généré avec succès !', '');
+    
+  } catch (error) {
+    console.error('Erreur génération BDD-DRRO:', error);
+    toast('Erreur lors de la génération: ' + error.message, 'err');
+  }
+}
+
+function openBDDInfo() {
+  toast('La BDD est générée localement à partir des 3 zones. Cliquez sur "Générer et télécharger" pour créer le fichier Excel.', 'info');
+}
+
+// ============================================================
+// SESSION (suite)
 // ============================================================
 
 function saveSession(z) {
@@ -2204,7 +2307,7 @@ function syncStickyHeights() {
 }
 
 // ============================================================
-// LOGIN
+// LOGIN (suite)
 // ============================================================
 
 function selectZone(z) {
@@ -2327,7 +2430,7 @@ function doLogout() {
 }
 
 // ============================================================
-// NAV
+// NAV (suite)
 // ============================================================
 
 function buildNav() {
@@ -2342,7 +2445,7 @@ function buildNav() {
 }
 
 // ============================================================
-// LOAD DATA
+// LOAD DATA (suite)
 // ============================================================
 
 async function reloadData() {
@@ -2606,7 +2709,7 @@ function setStatus(txt, ok) {
 }
 
 // ============================================================
-// KPIs
+// KPIs (suite)
 // ============================================================
 
 const obsVal = r => (r.Observation || '').toString().toUpperCase().trim();
@@ -2678,7 +2781,7 @@ function buildAdminZoneCards() {
 }
 
 // ============================================================
-// CHARTS
+// CHARTS (suite)
 // ============================================================
 
 function applyChartDefaults() {
@@ -2829,7 +2932,7 @@ function buildCharts() {
 }
 
 // ============================================================
-// DOWNLOAD
+// DOWNLOAD (MODIFIÉ POUR LA BDD DYNAMIQUE)
 // ============================================================
 
 function buildDlSection() {
@@ -2853,7 +2956,28 @@ function buildDlSection() {
   }
   
   const bddSection = document.getElementById('bddDlSection');
-  if (bddSection) bddSection.style.display = isAdmin ? 'block' : 'none';
+  if (bddSection) {
+    if (isAdmin) {
+      bddSection.style.display = 'block';
+      bddSection.innerHTML = `
+         <div class="sec-title" style="margin-top:24px">Base de données consolidée</div>
+         <div class="dl-grid">
+          <div class="dl-card">
+            <div class="dl-icon" style="background:color-mix(in srgb,var(--acc3) 14%,var(--s1))">📥</div>
+            <div class="dl-info">
+               <div class="dl-name">BDD-DRRO.xlsx</div>
+               <div class="dl-meta">Base consolidée - Toutes zones (CEBS, CEJ, AEBB)</div>
+            </div>
+            <div class="dl-btns">
+              <button class="btn btn-acc" onclick="generateBDD_DRRO()">🔄 Générer et télécharger</button>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      bddSection.style.display = 'none';
+    }
+  }
 }
 
 function buildExportBtns() {
@@ -2871,7 +2995,7 @@ function buildExportBtns() {
 }
 
 // ============================================================
-// FILTERS
+// FILTERS (suite)
 // ============================================================
 
 function captureFilters() {
@@ -2959,7 +3083,7 @@ function applyFilters() {
 }
 
 // ============================================================
-// TABLE
+// TABLE (suite)
 // ============================================================
 
 function displayCols() {
@@ -3050,7 +3174,6 @@ function renderTable() {
       }).join('');
       tBody.innerHTML = rowsHtml;
       
-      // Ajouter les écouteurs de clic sur chaque ligne cliquable
       document.querySelectorAll('#tBody .clickable-row').forEach(row => {
         row.addEventListener('click', (e) => {
           if (e.target.tagName === 'BUTTON' || e.target.closest('.btn-tbl-edit')) return;
@@ -3092,7 +3215,7 @@ function goPage(p) {
 }
 
 // ============================================================
-// MODAL EDIT - VERSION CORRIGÉE
+// MODAL EDIT - Version complète (inchangée pour la longueur)
 // ============================================================
 
 function openEditModal(gi) {
@@ -3103,7 +3226,6 @@ function openEditModal(gi) {
   modalZone = zone;
   const cfg = ZONE_CONFIG[zone] || {};
   
-  // ID Immobilisation pour le titre
   const idImmo = row.ID_Imobilisation || row.ID_Immobilisation || row['ID Immobilisation'] || 'Sans ID';
   
   const modalTitle = document.getElementById('modalTitle');
@@ -3119,34 +3241,29 @@ function openEditModal(gi) {
   const deleteBtn = document.getElementById('modalDeleteBtn');
   if (deleteBtn) deleteBtn.style.display = '';
   
-  // Construction du formulaire en grille 2 colonnes
   const modalFields = document.getElementById('modalFields');
   if (!modalFields) return;
   
   let html = '';
   
-  // 1. ID Immobilisation (MODIFIABLE)
   let idImmoValue = row.ID_Imobilisation || row.ID_Immobilisation || row['ID Immobilisation'] || '';
   html += `<div class="modal-field">
     <label>🏷️ ID IMMOBILISATION</label>
     <input type="text" id="mf_id_immo" value="${esc(idImmoValue)}" placeholder="ID Immobilisation">
   </div>`;
   
-  // 2. Numéro de série (MODIFIABLE)
   let serieValue = row.Numerie || row.NUMERIE || row['COM-ALU'] || '';
   html += `<div class="modal-field">
     <label>🔢 NUMÉRO DE SÉRIE</label>
     <input type="text" id="mf_serie" value="${esc(serieValue)}" placeholder="Numéro de série">
   </div>`;
   
-  // 3. Libellé article (MODIFIABLE - pleine largeur)
   let libValue = row.Lib_Article || row.LIB_ARTICLE || row['Libellé article'] || '';
   html += `<div class="modal-field full-width">
     <label>📦 LIBELLÉ ARTICLE</label>
     <input type="text" id="mf_libelle" value="${esc(libValue)}" placeholder="Libellé de l'article" style="width:100%">
   </div>`;
   
-  // 4. Observation (MODIFIABLE)
   let obsValue = row.Observation || row.OBSERVATION || '';
   let obsUpper = obsValue.toString().toUpperCase();
   let isDiscord = obsUpper.startsWith('DISCORDANCE');
@@ -3163,61 +3280,50 @@ function openEditModal(gi) {
     </select>
   </div>`;
   
-  // 5. Code article (MODIFIABLE)
   let codeValue = row.Cod_Article || row.COD_ARTICLE || row['Code article'] || '';
   html += `<div class="modal-field">
     <label>🔢 CODE ARTICLE</label>
     <input type="text" id="mf_code_article" value="${esc(codeValue)}" placeholder="Code article">
   </div>`;
   
-  // 6. N° Marché (MODIFIABLE)
   html += `<div class="modal-field">
     <label>📋 N° MARCHÉ</label>
     <input type="text" id="mf_marche" value="${esc(row.Marche || row['N° Marché'] || row.N_MARCHE || '')}" placeholder="Numéro de marché">
   </div>`;
   
-  // 7. PU (MODIFIABLE)
   html += `<div class="modal-field">
     <label>💰 PU</label>
     <input type="text" id="mf_pu" value="${esc(row.PU || row.Prix || '')}" placeholder="Prix unitaire">
   </div>`;
   
-  // 8. Marque (MODIFIABLE)
   html += `<div class="modal-field">
     <label>🏷️ MARQUE</label>
     <input type="text" id="mf_marque" value="${esc(row.Marque || row.LIB_MARQUE || '')}" placeholder="Marque">
   </div>`;
   
-  // 9. Modèle (MODIFIABLE)
   html += `<div class="modal-field">
     <label>📐 MODÈLE</label>
     <input type="text" id="mf_modele" value="${esc(row.Modele || row.LIB_MODELE || '')}" placeholder="Modèle">
   </div>`;
   
-
-  
-  // 10. LOCALISATION (MODIFIABLE)
   let locValue = row.Localisation || row.LOCALISATION || row.Emplacement || '';
   html += `<div class="modal-field">
     <label>📍 LOCALISATION</label>
     <input type="text" id="mf_localisation" value="${esc(locValue)}" placeholder="Localisation">
   </div>`;
   
-  // 11. GARE (MODIFIABLE)
   let gareValue = row.Gare || row.GARE || '';
   html += `<div class="modal-field">
     <label>🎫 GARE</label>
     <input type="text" id="mf_gare" value="${esc(gareValue)}" placeholder="Gare">
   </div>`;
   
-  // 12. INVENTORISTE (NON MODIFIABLE avec 🔒)
   let invValue = row.Inventoriste || row.INVENTORISTE || '';
   html += `<div class="modal-field">
     <label><span class="lock-icon">🔒</span> 👤 INVENTORISTE</label>
     <input type="text" class="readonly-field" value="${esc(invValue)}" readonly disabled>
   </div>`;
   
-  // 13. DATE D'INVENTAIRE (NON MODIFIABLE avec 🔒)
   let dateInvValue = row.Date_inventaire || row['Date d\'inventaire'] || row.DATE_INVENTAIRE || '';
   if (dateInvValue && !isFrenchDateTime(dateInvValue) && dateInvValue.includes(' ')) {
     let parts = dateInvValue.split(' ');
@@ -3233,19 +3339,16 @@ function openEditModal(gi) {
     <input type="text" class="readonly-field" value="${esc(dateInvValue)}" readonly disabled>
   </div>`;
   
-  // 14. DATE DE MODIFICATION (NON MODIFIABLE avec 🔒)
   let dateModifValue = row.Date_modification || row['Date de modification'] || row.DATE_MODIFICATION || '';
   html += `<div class="modal-field">
     <label><span class="lock-icon">🔒</span> 📅 DATE DE MODIFICATION</label>
     <input type="text" class="readonly-field" value="${esc(dateModifValue) || 'Non modifiée'}" readonly disabled>
   </div>`;
   
-  // Champ caché pour le texte Discordance
   html += `<input type="hidden" id="mf_obs_disc" value="${esc(discordText)}">`;
   
   modalFields.innerHTML = html;
   
-  // Afficher le champ Discordance si nécessaire
   if (selectValue === 'DISCORDANCE') {
     const obsSelect = document.getElementById('mf_obs_sel');
     if (obsSelect && obsSelect.parentElement) {
@@ -3306,7 +3409,6 @@ function submitModal() {
   const headers = sourceHeaders.filter(h => h && h !== 'Source');
   const data = {};
   
-  // Récupérer les valeurs des champs MODIFIABLES
   const serie = document.getElementById('mf_serie')?.value || '';
   const libelle = document.getElementById('mf_libelle')?.value || '';
   const codeArticle = document.getElementById('mf_code_article')?.value || '';
@@ -3314,10 +3416,7 @@ function submitModal() {
   const pu = document.getElementById('mf_pu')?.value || '';
   const marque = document.getElementById('mf_marque')?.value || '';
   const modele = document.getElementById('mf_modele')?.value || '';
-  const inventoriste = document.getElementById('mf_inventoriste')?.value || '';
-  const dateInventaire = document.getElementById('mf_date_inventaire')?.value || '';
   
-  // Observation
   const obsSelect = document.getElementById('mf_obs_sel');
   let observation = obsSelect?.value || '';
   if (observation === 'DISCORDANCE') {
@@ -3327,7 +3426,6 @@ function submitModal() {
     }
   }
   
-  // Associer aux bons champs
   headers.forEach(h => {
     const hUpper = h.toUpperCase();
     if (h === 'Numerie' || h === 'NUMERIE' || h === 'COM-ALU') data[h] = serie;
@@ -3337,13 +3435,10 @@ function submitModal() {
     else if (h === 'PU' || h === 'Prix') data[h] = pu;
     else if (h === 'Marque' || h === 'LIB_MARQUE') data[h] = marque;
     else if (h === 'Modele' || h === 'LIB_MODELE' || h === 'Modèle') data[h] = modele;
-    else if (h === 'Inventoriste' || h === 'INVENTORISTE') data[h] = inventoriste;
-    else if (h === 'Date_inventaire' || h === "Date d'inventaire" || h === 'DATE_INVENTAIRE') data[h] = dateInventaire;
     else if (h === 'Observation' || h === 'OBSERVATION') data[h] = observation;
   });
   
-  // Vérifier les modifications (ignorer les champs non modifiables)
-  const nonModifiable = ['Localisation', 'LOCALISATION', 'Gare', 'GARE', 'Date_modification', 'Date de modification', 'ID_Imobilisation', 'ID_Immobilisation'];
+  const nonModifiable = ['Localisation', 'LOCALISATION', 'Gare', 'GARE', 'Date_modification', 'Date de modification', 'ID_Imobilisation', 'ID_Immobilisation', 'Inventoriste', 'INVENTORISTE', 'Date_inventaire', 'Date d\'inventaire'];
   
   const changes = headers.filter(h => {
     if (nonModifiable.includes(h)) return false;
@@ -3357,7 +3452,6 @@ function submitModal() {
     return;
   }
   
-  // Construire le message de confirmation
   const idImmo = row.ID_Imobilisation || row.ID_Immobilisation || row['ID Immobilisation'] || '';
   let msg = `<p><strong>🏷️ ID Immobilisation :</strong> ${esc(idImmo)}</p>`;
   if (row.Lib_Article) msg += `<p><strong>📦 Libellé :</strong> ${esc(row.Lib_Article)}</p>`;
