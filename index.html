@@ -3252,7 +3252,7 @@ function openEditModal(gi) {
     <input type="text" id="mf_id_immo" value="${esc(idImmoValue)}" placeholder="ID Immobilisation">
   </div>`;
   
-  let serieValue = row.Numerie || row.NUMERIE || row['COM-ALU'] || '';
+  let serieValue = row.Numserie || row.NUMSERIE || row['NumSerie'] || '';
   html += `<div class="modal-field">
     <label>🔢 NUMÉRO DE SÉRIE</label>
     <input type="text" id="mf_serie" value="${esc(serieValue)}" placeholder="Numéro de série">
