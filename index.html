@@ -1,125 +1,29 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Site temporairement indisponible</title>
-
+<title>INVENTAIRE2026 - Accès suspendu</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
-    font-family:Arial, Helvetica, sans-serif;
-    padding:20px;
-}
-
-.container{
-    max-width:750px;
-    width:100%;
-    text-align:center;
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:20px;
-    padding:50px 40px;
-    box-shadow:0 0 40px rgba(0,0,0,0.4);
-}
-
-.code{
-    font-size:120px;
-    font-weight:800;
-    color:#ef4444;
-    line-height:1;
-    margin-bottom:15px;
-    text-shadow:0 0 20px rgba(239,68,68,0.4);
-}
-
-h1{
-    color:#ffffff;
-    font-size:2.2rem;
-    margin-bottom:30px;
-}
-
-p{
-    color:#e2e8f0;
-    font-size:1.15rem;
-    line-height:1.8;
-    margin-bottom:18px;
-}
-
-.badge{
-    display:inline-block;
-    margin-top:20px;
-    padding:12px 25px;
-    border-radius:50px;
-    background:rgba(239,68,68,0.15);
-    color:#fca5a5;
-    border:1px solid rgba(239,68,68,0.3);
-    font-weight:bold;
-}
-
-.footer{
-    margin-top:30px;
-    color:#94a3b8;
-    font-size:0.95rem;
-}
-
-@media(max-width:768px){
-    .code{
-        font-size:90px;
-    }
-
-    h1{
-        font-size:1.7rem;
-    }
-
-    p{
-        font-size:1rem;
-    }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#0f172a,#111827,#1e293b);font-family:Arial,Helvetica,sans-serif;padding:20px}
+.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:2rem 2.5rem;max-width:480px;width:100%;text-align:center}
+.code{font-size:56px;font-weight:700;color:#ef4444;line-height:1;margin-bottom:0.5rem}
+.title{font-size:1.2rem;font-weight:600;color:#ffffff;margin-bottom:1rem}
+.msg{font-size:0.9rem;color:#cbd5e1;line-height:1.7;margin-bottom:0.6rem}
+.badge{display:inline-block;margin-top:0.75rem;padding:5px 16px;border-radius:50px;background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);font-size:0.8rem;font-weight:600}
+.footer{margin-top:1rem;font-size:0.8rem;color:#64748b}
 </style>
-
 </head>
 <body>
-
-<div class="container">
-
-    <div class="code">404</div>
-
-    <h1>Site temporairement indisponible</h1>
-
-    <p>
-        L'accès à ce site a été suspendu temporairement pour des raisons de sécurité.
-    </p>
-
-    <p>
-        Veuillez utiliser le lien direct vers le fichier Drive qui vous a été transmis.
-    </p>
-
-    <p>
-        Nous vous remercions de votre compréhension et vous invitons à ne plus utiliser ce site jusqu'à nouvel avis communiqué par e-mail.
-    </p>
-
-    <div class="badge">
-        Service temporairement suspendu
-    </div>
-
-    <div class="footer">
-        Merci de votre patience.
-    </div>
-
+<div class="card">
+  <div class="code">404</div>
+  <div class="title">Accès temporairement suspendu</div>
+  <p class="msg">L'accès au dashboard DRRO a été suspendu temporairement pour des raisons de sécurité.</p>
+  <p class="msg">Veuillez utiliser le lien direct vers le fichier Drive disponible dans AppSheet.</p>
+  <p class="msg">Merci de ne plus utiliser ce site jusqu'à nouvel avis communiqué par e-mail.</p>
+  <div class="badge">🔒 Service suspendu</div>
+  <div class="footer">Merci de votre patience.</div>
 </div>
-
 </body>
 </html>
-```
